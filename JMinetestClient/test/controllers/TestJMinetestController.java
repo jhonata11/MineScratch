@@ -3,10 +3,11 @@ package controllers;
 
 import org.junit.Test;
 
-import exceptions.HostFormatException;
-import exceptions.PasswordLimitExcededException;
-import exceptions.PortFormatException;
-import exceptions.UsernameLimitExcededException;
+import br.ufsc.ine.controllers.JMinetestController;
+import br.ufsc.ine.exceptions.HostFormatException;
+import br.ufsc.ine.exceptions.PasswordLimitExcededException;
+import br.ufsc.ine.exceptions.PortFormatException;
+import br.ufsc.ine.exceptions.UsernameLimitExcededException;
 
 public class TestJMinetestController {
 	
