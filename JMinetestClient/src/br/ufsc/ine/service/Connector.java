@@ -1,4 +1,4 @@
-package br.ufsc.ine.client;
+package br.ufsc.ine.service;
 
 public class Connector {
 	public Connector() {

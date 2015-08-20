@@ -25,6 +25,9 @@ public class TestPacketBuilder {
 		short headerPeerID = Utils.byteToShort(ArrayUtils.subarray(headerToSend, 4, 6));
 		byte headerChannelID = ArrayUtils.subarray(headerToSend, 6, 7)[0];
 
+		
+		System.out.println(headerToSend.length);
+		
 		assertEquals(0x4F457403, protocoID);
 		assertEquals(0x00, headerPeerID);
 		assertEquals(0x00, headerChannelID);

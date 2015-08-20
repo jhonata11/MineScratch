@@ -1,9 +1,16 @@
-package br.ufsc.ine.client;
+package br.ufsc.ine.service;
 
-import java.util.Arrays;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 import br.ufsc.ine.models.MinetestPacket;
 import br.ufsc.ine.models.PacketBuilder;
+import br.ufsc.ine.utils.Utils;
 
 public class MinetestProtocol {
 
@@ -29,33 +36,48 @@ public class MinetestProtocol {
 
 	/**
 	 * Starts the handshake with the MinetestServer
+	 * @throws Exception 
 	 */
-	public void startHandshake() {
+	public void startHandshake() throws Exception {
 		MinetestPacket packet = new MinetestPacket();
 		byte[] initialHandshakeBytes = packetBuilder.createHandshakePacket(this.username, this.password);
 		packet.addToBodyStart(initialHandshakeBytes);
 		this.sendCommand(packet);
 	}
+	
+	public void startReliableConnection() throws Exception{
+		this.sendCommand(new MinetestPacket());
+	}
 
 	/**
 	 * Sends a command to the MinetestServer with a given message
 	 * @param packet the message to be sent to the MinetestServer
+	 * @throws Exception 
 	 */
-	public void sendCommand(MinetestPacket packet) {
+	public void sendCommand(MinetestPacket packet) throws Exception {
 		packet.addToBodyStart(packetBuilder.createCommandByte());
 		this.sendReliable(packet);
 	}
 
-	private void sendReliable(MinetestPacket packet) {
+	private void sendReliable(MinetestPacket packet) throws Exception {
 		packet.addToBodyStart(packetBuilder.createReliableBytes(this.seqNum));
 		this.seqNum++;
 		this.send(packet);
 	}
 
-	private void send(MinetestPacket packet) {
+	private void send(MinetestPacket packet) throws Exception {
 		packet.addToHeader(packetBuilder.createHeader());
 		byte[] sendData = packet.converToMessage();
-		System.out.println(Arrays.toString(sendData));
+        sendDataToServer(sendData);
+	}
+
+	
+	private void sendDataToServer(byte[] sendData) throws UnknownHostException, SocketException, IOException {
+        InetAddress address = InetAddress.getByName("192.168.0.14");
+        DatagramPacket packet3 = new DatagramPacket(sendData, sendData.length, address, 30000);
+        DatagramSocket datagramSocket = new DatagramSocket(30000);
+        datagramSocket.send(packet3);
+        datagramSocket.close();
 	}
 
 	/**

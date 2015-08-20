@@ -5,7 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.ufsc.ine.client.MinetestProtocol;
+import br.ufsc.ine.service.MinetestProtocol;
+import br.ufsc.ine.service.Receiver;
 
 public class TestProtocol {
 	private MinetestProtocol minetestProtocol;
@@ -25,6 +26,14 @@ public class TestProtocol {
 		assertEquals("senhaQualquer", minetestProtocol.getPassword());
 	}
 	
+	
+	@Test
+	public void sendPacket() throws Exception {
+		minetestProtocol.startHandshake();
+		minetestProtocol.startReliableConnection();
+
+		new Receiver().run(30000);
+	}
 	
 
 }

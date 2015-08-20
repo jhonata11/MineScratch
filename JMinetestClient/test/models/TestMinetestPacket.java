@@ -87,4 +87,5 @@ public class TestMinetestPacket {
 		
 		assertNotEquals(testPacket, this.minetestPacket);
 	}
+
 }

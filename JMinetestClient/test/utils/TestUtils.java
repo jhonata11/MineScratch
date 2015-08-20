@@ -62,5 +62,16 @@ public class TestUtils {
 		assertNotEquals(intValue, shortValue);
 		assertEquals(intValue, converted);
 	}
+	
+	@Test
+	public void testPrintByteArray() throws Exception {
+		String string1 = Utils.byteArrayToString(1);
+		String string2 = Utils.byteArrayToString(2);
+		String string3 = Utils.byteArrayToString(3);
+		
+		assertEquals("00000001", string1);
+		assertEquals("00000010", string2);
+		assertEquals("00000011", string3);
+	}
 
 }
