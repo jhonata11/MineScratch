@@ -38,11 +38,7 @@ public class Utils {
 	public static String byteArrayToString(int i) {
 		return Integer.toBinaryString(i & 255 | 256).substring(1);
 		
-//		for (byte b : sendData) {
-////		    System.out.println(Integer.toBinaryString(b & 255 | 256).substring(1) + ": " + new Integer(b));
-//		    System.out.println(Integer.toBinaryString(b & 255 | 256).substring(1));
-//
-//		}
+
 		
 	}
 }

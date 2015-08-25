@@ -1,4 +1,4 @@
-package br.ufsc.ine.exceptions;
+package br.ufsc.ine.minetest.exceptions;
 
 public class UsernameLimitExcededException extends Exception {
 	private static final long serialVersionUID = -7721804798440354644L;

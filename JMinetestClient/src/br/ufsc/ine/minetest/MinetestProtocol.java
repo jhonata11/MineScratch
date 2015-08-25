@@ -1,16 +1,13 @@
-package br.ufsc.ine.service;
+package br.ufsc.ine.minetest;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 import br.ufsc.ine.models.MinetestPacket;
 import br.ufsc.ine.models.PacketBuilder;
-import br.ufsc.ine.utils.Utils;
 
 public class MinetestProtocol {
 
@@ -22,6 +19,7 @@ public class MinetestProtocol {
 	private int port;
 	private String username;
 	private String password;
+	private short acked;
 
 
 	public MinetestProtocol(String host, int port, String username, String password) throws InterruptedException {
@@ -44,9 +42,22 @@ public class MinetestProtocol {
 		packet.addToBodyStart(initialHandshakeBytes);
 		this.sendCommand(packet);
 	}
+
+	public void handShakeEnd() throws Exception {
+		byte[] toServerInit2 = ByteBuffer.allocate(2).putShort((short) 0x11).array();
+		MinetestPacket a = new MinetestPacket();
+		a.addToBodyStart(toServerInit2);
+		this.sendCommand(a);
+	}
 	
 	public void startReliableConnection() throws Exception{
 		this.sendCommand(new MinetestPacket());
+	}
+	
+	public void ack(short seqnum) throws Exception{
+		MinetestPacket packet = new MinetestPacket();
+		packet.addToBodyEnd(packetBuilder.createAckPackage(seqnum));
+		this.send(packet);
 	}
 
 	/**
@@ -69,15 +80,23 @@ public class MinetestProtocol {
 		packet.addToHeader(packetBuilder.createHeader());
 		byte[] sendData = packet.converToMessage();
         sendDataToServer(sendData);
+//		for (byte b : sendData) {
+////		    System.out.println(Integer.toBinaryString(b & 255 | 256).substring(1) + ": " + new Integer(b));
+//		    System.out.println(Integer.toBinaryString(b & 255 | 256).substring(1));
+//
+//		}
 	}
 
 	
-	private void sendDataToServer(byte[] sendData) throws UnknownHostException, SocketException, IOException {
+	private void sendDataToServer(byte[] sendData) throws Exception {
         InetAddress address = InetAddress.getByName("192.168.0.14");
         DatagramPacket packet3 = new DatagramPacket(sendData, sendData.length, address, 30000);
         DatagramSocket datagramSocket = new DatagramSocket(30000);
         datagramSocket.send(packet3);
         datagramSocket.close();
+        
+		System.out.println("SENT: " + Arrays.toString(sendData));
+
 	}
 
 	/**
@@ -134,5 +153,13 @@ public class MinetestProtocol {
 	 */
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public void setAcked(short b) {
+		this.acked = b;
+	}
+
+	public void setPeedId(short valor) {
+		this.packetBuilder.setPeerId(valor);
 	}
 }
