@@ -1,6 +1,7 @@
 package controllers;
 
 
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,4 +50,6 @@ public class TestController {
 		controller = new Controller();
 		controller.startConnection("192.168.0.14", "30000", "jhonata11", "senha");
 	}
+	
+
 }

@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;
 
+import br.ufsc.ine.models.PacketBuilder;
 import br.ufsc.ine.utils.Utils;
 
 public class TestUtils {
@@ -72,6 +74,13 @@ public class TestUtils {
 		assertEquals("00000001", string1);
 		assertEquals("00000010", string2);
 		assertEquals("00000011", string3);
+	}
+	
+	@Test
+	public void algumTeste() throws Exception {
+		
+		short a = (short) 65500;
+		System.out.println((int) 65500);
 	}
 
 }

@@ -1,7 +1,4 @@
 /br/
 /controllers/
-/client/
-/service/
-/models/
 /utils/
-/minetest/
+/models/

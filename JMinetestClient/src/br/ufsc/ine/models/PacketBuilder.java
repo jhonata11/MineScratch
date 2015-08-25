@@ -2,7 +2,11 @@ package br.ufsc.ine.models;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
+import org.apache.commons.lang3.ArrayUtils;
+
+import br.ufsc.ine.minetest.Sender;
 import br.ufsc.ine.utils.Utils;
 
 public class PacketBuilder {
@@ -12,7 +16,7 @@ public class PacketBuilder {
 	// Packet types.
 	private static final byte CONTROL = 0x00;
 	private static final byte ORIGINAL = 0x01;
-//	private static final short SPLIT = 0x02;
+	// private static final short SPLIT = 0x02;
 	private static final byte RELIABLE = 0x03;
 	// Needed. Don't know why know why
 	private static final byte SER_FMT_VER_HIGHEST_READ = 0x1A;
@@ -21,13 +25,18 @@ public class PacketBuilder {
 	// Supported protocol versions lifted from official client.
 	private static final short MIN_SUPPORTED_PROTOCOL = 0x0d;
 	private static final short MAX_SUPPORTED_PROTOCOL = 0x16;
-	
+
 	// Types of CONTROL packets.
 	private static final byte CONTROLTYPE_ACK = 0x00;
-
+	private static final byte CONTROLTYPE_PING = 0x02;
 
 	private short peerId = 0;
 	private byte channel = 0;
+	private Sender sender;
+
+	public PacketBuilder(Sender sender) {
+		this.sender = sender;
+	}
 
 	public byte[] createHeader() {
 		byte[] protocolId = ByteBuffer.allocate(4).putInt(PROTOCOL_ID).array();
@@ -48,23 +57,72 @@ public class PacketBuilder {
 		byte[] packet = Utils.concatenateBytes(toServerInit, serFmtVerHighestRead, userName, password, minSupportedProtocol, maxSupportedProtocol);
 		return packet;
 	}
-	
-	public byte[] createAckPackage(short seqNum){
-		byte [] control = {CONTROL};
-		byte [] controlAck = {CONTROLTYPE_ACK};
+
+	public byte[] createAckPackage(short seqNum) {
+		byte[] control = { CONTROL };
+		byte[] controlAck = { CONTROLTYPE_ACK };
 		byte[] messageSeqNum = ByteBuffer.allocate(2).putShort((short) (seqNum & 0xFFFF)).array();
 		return Utils.concatenateBytes(control, controlAck, messageSeqNum);
 
 	}
-	
-	public byte[] createCommandByte(){
+
+	public byte[] createCommandByte() {
 		return ByteBuffer.allocate(1).put(ORIGINAL).array();
 	}
-	
-	public byte[] createReliableBytes(int seqNum){
+
+	public byte[] createReliableBytes(int seqNum) {
 		byte[] reliable = ByteBuffer.allocate(1).put(RELIABLE).array();
 		byte[] messageSeqNum = ByteBuffer.allocate(2).putShort((short) (seqNum & 0xFFFF)).array();
 		return Utils.concatenateBytes(reliable, messageSeqNum);
+	}
+
+	public byte[] receiveAndProcess(byte[] receivedData) {
+		byte[] header = ArrayUtils.subarray(receivedData, 0, 7);
+		
+		int protocoID = Utils.byteToInt(ArrayUtils.subarray(header, 0, 4));
+		short headerPeerID = Utils.byteToShort(ArrayUtils.subarray(header, 4, 6));
+//		byte headerChannelID = ArrayUtils.subarray(header, 6, 7)[0];
+		
+		assert (protocoID == PROTOCOL_ID): "protocolo inesperado";
+		assert (headerPeerID == peerId):  String.format("peer id devia ser 1, e veio %s", peerId);
+
+		byte[] bodyContent = ArrayUtils.subarray(receivedData, 7, receivedData.length);
+		return bodyContent;
+	}
+
+	public void processPacket(byte[] packet) throws Exception {
+		byte type = packet[0];
+		byte[] data = ArrayUtils.subarray(packet, 1, packet.length);
+
+		if (type == RELIABLE) {
+			this.reliable(data);
+		} else if (type == CONTROL) {
+			control(data);
+		}
+	}
+
+	private void control(byte[] data) throws Exception {
+		byte tipoDeControle = data[0];
+		if(data.length == 1){
+			assert(data[0] == CONTROLTYPE_PING): "devia ser CONTROLTYPE_PING";
+			return;
+		}
+		
+		short valor = Utils.byteToShort(ArrayUtils.subarray(data, 0, 3));
+		if (tipoDeControle == 0) {
+			this.sender.setAcked(valor);
+		} else if (tipoDeControle == 1) {
+			sender.setPeedId(valor);
+			sender.handShakeEnd();
+		}
+	}
+
+	private void reliable(byte[] data) throws Exception {
+		byte[] seq = ArrayUtils.subarray(data, 0, 2);
+		short seqnum = Utils.byteToShort(seq);
+		this.sender.ack(seqnum);
+		System.out.println("enviado depois do ack: " + Arrays.toString(ArrayUtils.subarray(data, 2, data.length)));
+		this.processPacket(ArrayUtils.subarray(data, 2, data.length));
 	}
 
 	/**
@@ -75,10 +133,10 @@ public class PacketBuilder {
 	}
 
 	/**
-	 * @param peerId the peerId to set
+	 * @param peerId
+	 *            the peerId to set
 	 */
 	public void setPeerId(short peerId) {
 		this.peerId = peerId;
 	}
-
 }

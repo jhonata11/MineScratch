@@ -22,7 +22,7 @@ public class Controller {
 
 		System.out.printf("Listening on udp:%s:%s", host, port);
 		while (true) {
-			this.connector.receive();
+			this.connector.listen();
 		}
 	}
 

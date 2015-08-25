@@ -6,6 +6,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Before;
 import org.junit.Test;
 
+import br.ufsc.ine.minetest.Sender;
 import br.ufsc.ine.models.PacketBuilder;
 import br.ufsc.ine.utils.Utils;
 
@@ -14,8 +15,8 @@ public class TestPacketBuilder {
 	private PacketBuilder packetBuilder;
 
 	@Before
-	public void setUp(){
-		packetBuilder = new PacketBuilder();
+	public void setUp() throws InterruptedException{
+		packetBuilder = new PacketBuilder(new Sender("192.168.0.14", 3000));
 	}
 	
 	@Test
@@ -73,7 +74,6 @@ public class TestPacketBuilder {
 		assertEquals(reliable, 0x03);
 		assertEquals(sequentialNumber, Utils.unsignedShortToInt(receivedSeqNumber));
 		assertEquals(3, packet.length);
-
 	}
 
 }

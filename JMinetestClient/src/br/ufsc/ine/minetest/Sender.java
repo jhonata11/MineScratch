@@ -9,7 +9,7 @@ import java.util.Arrays;
 import br.ufsc.ine.models.MinetestPacket;
 import br.ufsc.ine.models.PacketBuilder;
 
-public class MinetestProtocol {
+public class Sender {
 
 	private static final short SEQNUM_INITIAL = (short) 65500;
 	private short seqNum;
@@ -17,28 +17,26 @@ public class MinetestProtocol {
 
 	private String host;
 	private int port;
-	private String username;
-	private String password;
 	private short acked;
 
 
-	public MinetestProtocol(String host, int port, String username, String password) throws InterruptedException {
+	public Sender(String host, int port) throws InterruptedException {
 		this.seqNum = SEQNUM_INITIAL;
-		packetBuilder = new PacketBuilder();
+		packetBuilder = new PacketBuilder(this);
 		
 		this.host = host;
 		this.port = port;
-		this.username = username;
-		this.password = password;
 	}
 
 	/**
 	 * Starts the handshake with the MinetestServer
+	 * @param username 
+	 * @param password 
 	 * @throws Exception 
 	 */
-	public void startHandshake() throws Exception {
+	public void startHandshake(String username, String password) throws Exception {
 		MinetestPacket packet = new MinetestPacket();
-		byte[] initialHandshakeBytes = packetBuilder.createHandshakePacket(this.username, this.password);
+		byte[] initialHandshakeBytes = packetBuilder.createHandshakePacket(username, password);
 		packet.addToBodyStart(initialHandshakeBytes);
 		this.sendCommand(packet);
 	}
@@ -89,70 +87,13 @@ public class MinetestProtocol {
 
 	
 	private void sendDataToServer(byte[] sendData) throws Exception {
-        InetAddress address = InetAddress.getByName("192.168.0.14");
-        DatagramPacket packet3 = new DatagramPacket(sendData, sendData.length, address, 30000);
-        DatagramSocket datagramSocket = new DatagramSocket(30000);
+        InetAddress address = InetAddress.getByName(this.host);
+        DatagramPacket packet3 = new DatagramPacket(sendData, sendData.length, address, this.port);
+        DatagramSocket datagramSocket = new DatagramSocket(this.port);
         datagramSocket.send(packet3);
         datagramSocket.close();
         
 		System.out.println("SENT: " + Arrays.toString(sendData));
-
-	}
-
-	/**
-	 * @return the host
-	 */
-	public String getHost() {
-		return host;
-	}
-
-	/**
-	 * @param host the host to set
-	 */
-	public void setHost(String host) {
-		this.host = host;
-	}
-
-	/**
-	 * @return the port
-	 */
-	public int getPort() {
-		return port;
-	}
-
-	/**
-	 * @param port the port to set
-	 */
-	public void setPort(int port) {
-		this.port = port;
-	}
-
-	/**
-	 * @return the username
-	 */
-	public String getUsername() {
-		return username;
-	}
-
-	/**
-	 * @param username the username to set
-	 */
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	/**
-	 * @return the password
-	 */
-	public String getPassword() {
-		return password;
-	}
-
-	/**
-	 * @param password the password to set
-	 */
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public void setAcked(short b) {
