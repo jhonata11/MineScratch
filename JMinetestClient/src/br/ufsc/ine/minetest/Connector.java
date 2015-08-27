@@ -14,7 +14,7 @@ public class Connector {
 		this.username = username;
 		this.password = password;
 		sender = new Sender(host, port);
-		receiver = new Receiver(sender.getMinetestProtocol(), port);
+		receiver = new Receiver(sender.getMinetestProtocol());
 	}
 
 	public void connect() throws Exception{

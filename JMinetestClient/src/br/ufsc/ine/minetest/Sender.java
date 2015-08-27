@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 import br.ufsc.ine.models.MinetestPacket;
 
-public class Sender {
+public class Sender{
 
 	private static final short SEQNUM_INITIAL = (short) 65500;
 	private short seqNum;
@@ -47,7 +47,6 @@ public class Sender {
 		MinetestPacket a = new MinetestPacket();
 		a.addToBodyStart(toServerInit2);
 		
-		System.out.println("handshake end ====================================");
 		this.sendCommand(a);
 	}
 	
@@ -88,11 +87,6 @@ public class Sender {
 		byte[] sendData = packet.converToMessage();
 		
         sendDataToServer(sendData);
-//		for (byte b : sendData) {
-////		    System.out.println(Integer.toBinaryString(b & 255 | 256).substring(1) + ": " + new Integer(b));
-//		    System.out.println(Integer.toBinaryString(b & 255 | 256).substring(1));
-//
-//		}
 	}
 
 	
@@ -111,9 +105,9 @@ public class Sender {
 		this.acked = b;
 	}
 
-	public void setPeerId(short valor) {
-		this.minetestProtocol.setPeerId(valor);
-	}
+//	public void setPeerId(short valor) {
+//		this.minetestProtocol.setPeerId(valor);
+//	}
 
 	/**
 	 * @return the minetestProtocol

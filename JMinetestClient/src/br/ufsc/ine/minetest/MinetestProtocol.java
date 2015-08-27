@@ -9,7 +9,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import br.ufsc.ine.models.MinetestPacket;
 import br.ufsc.ine.utils.Utils;
 
 public class MinetestProtocol {
@@ -151,12 +150,12 @@ public class MinetestProtocol {
 			return;
 		}
 		
-		short valor = Utils.byteToShort(ArrayUtils.subarray(data, 1, 4));
+		short value = Utils.byteToShort(ArrayUtils.subarray(data, 1, 4));
 		if (controlType == CONTROLTYPE_ACK) {
-			this.sender.setAcked(valor);
+			this.sender.setAcked(value);
 		} else if (controlType == CONTROLTYPE_SET_PEER_ID) {
-			System.out.println("peer ID: " + valor);
-			sender.setPeerId(valor);
+			System.out.println("peer ID: " + value);
+			this.setPeerId(value);
 			sender.handShakeEnd();
 		}
 	}
@@ -165,7 +164,6 @@ public class MinetestProtocol {
 		byte[] seq = ArrayUtils.subarray(data, 0, 2);
 		short seqnum = Utils.byteToShort(seq);
 		sender.ack(seqnum);
-//		System.out.println("enviado depois do ack: " + Arrays.toString(ArrayUtils.subarray(data, 2, data.length)));
 		this.processPacket(ArrayUtils.subarray(data, 2, data.length));
 	}
 
@@ -177,8 +175,7 @@ public class MinetestProtocol {
 	}
 
 	/**
-	 * @param peerId
-	 *            the peerId to set
+	 * @param peerId the peerId to set
 	 */
 	public void setPeerId(short peerId) {
 		this.peerId = peerId;

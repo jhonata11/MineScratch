@@ -4,6 +4,11 @@ package controllers;
 
 import static org.junit.Assert.*;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -87,6 +92,10 @@ public class TestController {
 		String meu = "0100111101000101011101000000001100000000000000110000000000000000000000001111111111011101";
 		String dele = "0100111101000101011101000000001100000000000000110000000000000000000000001111111111011101";
 		assertEquals(dele, meu);
+		
+		byte[] encoded =  Charset.forName("UTF-16BE").encode("teste").array();
+		String str = new String(encoded, StandardCharsets.UTF_16BE);
+		System.out.println(str);
 	}
 	
 

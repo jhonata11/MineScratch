@@ -2,17 +2,14 @@ package br.ufsc.ine.minetest;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.util.Arrays;
 
-public class Receiver implements Runnable{
+public class Receiver {
 	
 
 	private MinetestProtocol minetestProtocol;
-	private int port;
 
-	public Receiver(MinetestProtocol minetest, int port) {
+	public Receiver(MinetestProtocol minetest) {
 		this.minetestProtocol = minetest;
-		this.port = port;
 	}
 
 	public void listen(int port) throws Exception {
@@ -34,18 +31,4 @@ public class Receiver implements Runnable{
 		serverSocket.close();
 		minetestProtocol.processPacket(bodyContent);
 	}
-
-	@Override
-	public void run() {
-		while(true){
-			try {
-				listen(port);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-
-
 }
