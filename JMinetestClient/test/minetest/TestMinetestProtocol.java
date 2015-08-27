@@ -1,4 +1,4 @@
-package models;
+package minetest;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,22 +6,22 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Before;
 import org.junit.Test;
 
+import br.ufsc.ine.minetest.MinetestProtocol;
 import br.ufsc.ine.minetest.Sender;
-import br.ufsc.ine.models.PacketBuilder;
 import br.ufsc.ine.utils.Utils;
 
-public class TestPacketBuilder {
+public class TestMinetestProtocol {
 	
-	private PacketBuilder packetBuilder;
+	private MinetestProtocol minetestProtocol;
 
 	@Before
 	public void setUp() throws InterruptedException{
-		packetBuilder = new PacketBuilder(new Sender("192.168.0.14", 3000));
+		minetestProtocol = new MinetestProtocol(new Sender("192.168.0.14", 3000));
 	}
 	
 	@Test
 	public void testCreateHeader() throws Exception {
-		byte[] headerToSend = packetBuilder.createHeader();
+		byte[] headerToSend = minetestProtocol.createHeader();
 		int protocoID = Utils.byteToInt(ArrayUtils.subarray(headerToSend, 0, 4));
 		short headerPeerID = Utils.byteToShort(ArrayUtils.subarray(headerToSend, 4, 6));
 		byte headerChannelID = ArrayUtils.subarray(headerToSend, 6, 7)[0];
@@ -38,7 +38,7 @@ public class TestPacketBuilder {
 	
 	@Test
 	public void testCreateHandshake() throws Exception {
-		byte[] packet = packetBuilder.createHandshakePacket("jhonata11", "senhaQualquer");
+		byte[] packet = minetestProtocol.createHandshakePacket("jhonata11", "senhaQualquer");
 		short toServerInit = Utils.byteToShort(ArrayUtils.subarray(packet, 0, 2));
 		byte serFmtVerHighestRead = ArrayUtils.subarray(packet, 2, 3)[0];
 		String username = new String(ArrayUtils.subarray(packet, 3, 23), "UTF-8");
@@ -59,7 +59,7 @@ public class TestPacketBuilder {
 	
 	@Test
 	public void testCreateCommandByte() throws Exception {
-		byte[] packet = packetBuilder.createCommandByte();
+		byte[] packet = minetestProtocol.createCommandByte();
 		assertEquals(0x01, packet[0]);
 		assertEquals(1, packet.length);
 	}
@@ -67,7 +67,7 @@ public class TestPacketBuilder {
 	@Test
 	public void testCreateReliableBytes() throws Exception {
 		int sequentialNumber = 65500;
-		byte[] packet = packetBuilder.createReliableBytes(sequentialNumber);
+		byte[] packet = minetestProtocol.createReliableBytes(sequentialNumber);
 		byte reliable = ArrayUtils.subarray(packet, 0, 1)[0];
 		short receivedSeqNumber = Utils.byteToShort(ArrayUtils.subarray(packet, 1, 3));
 

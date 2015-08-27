@@ -2,6 +2,8 @@ package controllers;
 
 
 
+import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,6 +12,7 @@ import br.ufsc.ine.minetest.exceptions.HostFormatException;
 import br.ufsc.ine.minetest.exceptions.PasswordLimitExcededException;
 import br.ufsc.ine.minetest.exceptions.PortFormatException;
 import br.ufsc.ine.minetest.exceptions.UsernameLimitExcededException;
+import br.ufsc.ine.utils.Utils;
 
 public class TestController {
 	
@@ -49,6 +52,41 @@ public class TestController {
 	public void testConnection() throws Exception {
 		controller = new Controller();
 		controller.startConnection("192.168.0.14", "30000", "jhonata11", "senha");
+	}
+	
+	@Test
+	public void segundoPacoteEnviado() throws Exception {
+		byte[] a = {79, 69, 116, 3, 0, 3, 0, 0, 0, -1, -35};
+		for (int i = 0; i < a.length; i++) {
+			System.out.println(Utils.integerToBinary(a[i]));
+		}
+		String meu = "0100111101000101011101000000001100000000000000000000000000000011111111111101110100000001";
+		String dele = "0100111101000101011101000000001100000000000000000000000000000011111111111101110100000001";
+
+		assertEquals(dele, meu);
+	}
+	
+	@Test
+	public void terceiroPacoteEnviado() throws Exception {
+		String meu = "0100111101000101011101000000001100000000000000000000000000000000000000001111111111011100";
+		String dele = "0100111101000101011101000000001100000000000000000000000000000000000000001111111111011100";
+
+		assertEquals(dele, meu);
+	}
+	
+	@Test
+	public void quartoPacoteEnviadoHandshakeEnd() throws Exception {
+		String meu = "01001111010001010111010000000011000000000000001100000000000000111111111111011110000000010000000000010001";
+		String dele = "01001111010001010111010000000011000000000000001100000000000000111111111111011110000000010000000000010001";
+
+		assertEquals(dele, meu);
+	}
+	
+	@Test
+	public void quintoPacoteEnviado() throws Exception {
+		String meu = "0100111101000101011101000000001100000000000000110000000000000000000000001111111111011101";
+		String dele = "0100111101000101011101000000001100000000000000110000000000000000000000001111111111011101";
+		assertEquals(dele, meu);
 	}
 	
 

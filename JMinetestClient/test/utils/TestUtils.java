@@ -7,10 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;
 
-import br.ufsc.ine.models.PacketBuilder;
 import br.ufsc.ine.utils.Utils;
 
 public class TestUtils {
@@ -66,10 +64,10 @@ public class TestUtils {
 	}
 	
 	@Test
-	public void testPrintByteArray() throws Exception {
-		String string1 = Utils.byteArrayToString(1);
-		String string2 = Utils.byteArrayToString(2);
-		String string3 = Utils.byteArrayToString(3);
+	public void testPrintBinarieInteger() throws Exception {
+		String string1 = Utils.integerToBinary(1);
+		String string2 = Utils.integerToBinary(2);
+		String string3 = Utils.integerToBinary(3);
 		
 		assertEquals("00000001", string1);
 		assertEquals("00000010", string2);
@@ -77,10 +75,8 @@ public class TestUtils {
 	}
 	
 	@Test
-	public void algumTeste() throws Exception {
+	public void teste() throws Exception {
+		System.out.println(Utils.integerToBinary(-1));
 		
-		short a = (short) 65500;
-		System.out.println((int) 65500);
 	}
-
 }

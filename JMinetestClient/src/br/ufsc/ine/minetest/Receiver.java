@@ -4,14 +4,15 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.Arrays;
 
-import br.ufsc.ine.models.PacketBuilder;
-
-public class Receiver {
+public class Receiver implements Runnable{
 	
 
-	private PacketBuilder packetBuilder;
+	private MinetestProtocol minetestProtocol;
+	private int port;
 
-	public Receiver(Sender minetest) {
+	public Receiver(MinetestProtocol minetest, int port) {
+		this.minetestProtocol = minetest;
+		this.port = port;
 	}
 
 	public void listen(int port) throws Exception {
@@ -26,12 +27,24 @@ public class Receiver {
 		byte[] receivedData = new byte[packet.getLength()];
 
 		System.arraycopy(packet.getData(), packet.getOffset(), receivedData, 0, packet.getLength());
-		System.out.println("RECEIVED: " + Arrays.toString(receivedData));
+//		System.out.println("RECEIVED: " + Arrays.toString(receivedData));
 		
-		byte[] bodyContent = this.packetBuilder.receiveAndProcess(receivedData);
+		byte[] bodyContent = this.minetestProtocol.receiveAndProcess(receivedData);
 		
 		serverSocket.close();
-		packetBuilder.processPacket(bodyContent);
+		minetestProtocol.processPacket(bodyContent);
+	}
+
+	@Override
+	public void run() {
+		while(true){
+			try {
+				listen(port);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 

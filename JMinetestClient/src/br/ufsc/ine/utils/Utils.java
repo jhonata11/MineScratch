@@ -25,6 +25,7 @@ public class Utils {
 
 	public static byte[] listToArray(List<byte[]> arrayList) {
 		byte[] toReturn = new byte[0];
+		
 		for (byte[] a: arrayList){
 			toReturn = ArrayUtils.addAll(toReturn, a);
 		}
@@ -35,10 +36,7 @@ public class Utils {
 		return shortValue >= 0 ? shortValue : 0x10000 + shortValue; 
 	}
 
-	public static String byteArrayToString(int i) {
+	public static String integerToBinary(int i) {
 		return Integer.toBinaryString(i & 255 | 256).substring(1);
-		
-
-		
 	}
 }

@@ -20,10 +20,12 @@ public class Controller {
 		this.connector = new Connector(host, Integer.parseInt(port), username, password);
 		this.connector.connect();
 
-		System.out.printf("Listening on udp:%s:%s", host, port);
+		System.out.printf("Listening on udp:%s:%s\n", host, port);
+		
 		while (true) {
 			this.connector.listen();
 		}
+		
 	}
 
 	public void verifyArguments(String host, String port, String username, String password)

@@ -7,22 +7,23 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import br.ufsc.ine.models.MinetestPacket;
-import br.ufsc.ine.models.PacketBuilder;
 
 public class Sender {
 
 	private static final short SEQNUM_INITIAL = (short) 65500;
 	private short seqNum;
-	private PacketBuilder packetBuilder;
+	private MinetestProtocol minetestProtocol;
 
 	private String host;
 	private int port;
 	private short acked;
+	
+	int count = 0;
 
 
 	public Sender(String host, int port) throws InterruptedException {
 		this.seqNum = SEQNUM_INITIAL;
-		packetBuilder = new PacketBuilder(this);
+		minetestProtocol = new MinetestProtocol(this);
 		
 		this.host = host;
 		this.port = port;
@@ -36,7 +37,7 @@ public class Sender {
 	 */
 	public void startHandshake(String username, String password) throws Exception {
 		MinetestPacket packet = new MinetestPacket();
-		byte[] initialHandshakeBytes = packetBuilder.createHandshakePacket(username, password);
+		byte[] initialHandshakeBytes = minetestProtocol.createHandshakePacket(username, password);
 		packet.addToBodyStart(initialHandshakeBytes);
 		this.sendCommand(packet);
 	}
@@ -45,7 +46,15 @@ public class Sender {
 		byte[] toServerInit2 = ByteBuffer.allocate(2).putShort((short) 0x11).array();
 		MinetestPacket a = new MinetestPacket();
 		a.addToBodyStart(toServerInit2);
+		
+		System.out.println("handshake end ====================================");
 		this.sendCommand(a);
+	}
+	
+	public void disconnect() throws Exception{
+		MinetestPacket packet = new MinetestPacket();
+		packet.addToBodyStart(this.minetestProtocol.disconnect());
+		this.send(packet);
 	}
 	
 	public void startReliableConnection() throws Exception{
@@ -54,7 +63,7 @@ public class Sender {
 	
 	public void ack(short seqnum) throws Exception{
 		MinetestPacket packet = new MinetestPacket();
-		packet.addToBodyEnd(packetBuilder.createAckPackage(seqnum));
+		packet.addToBodyEnd(minetestProtocol.createAckPackage(seqnum));
 		this.send(packet);
 	}
 
@@ -64,19 +73,20 @@ public class Sender {
 	 * @throws Exception 
 	 */
 	public void sendCommand(MinetestPacket packet) throws Exception {
-		packet.addToBodyStart(packetBuilder.createCommandByte());
+		packet.addToBodyStart(minetestProtocol.createCommandByte());
 		this.sendReliable(packet);
 	}
 
 	private void sendReliable(MinetestPacket packet) throws Exception {
-		packet.addToBodyStart(packetBuilder.createReliableBytes(this.seqNum));
+		packet.addToBodyStart(minetestProtocol.createReliableBytes(this.seqNum));
 		this.seqNum++;
 		this.send(packet);
 	}
 
 	private void send(MinetestPacket packet) throws Exception {
-		packet.addToHeader(packetBuilder.createHeader());
+		packet.addToHeader(minetestProtocol.createHeader());
 		byte[] sendData = packet.converToMessage();
+		
         sendDataToServer(sendData);
 //		for (byte b : sendData) {
 ////		    System.out.println(Integer.toBinaryString(b & 255 | 256).substring(1) + ": " + new Integer(b));
@@ -93,14 +103,29 @@ public class Sender {
         datagramSocket.send(packet3);
         datagramSocket.close();
         
-		System.out.println("SENT: " + Arrays.toString(sendData));
+		System.out.println(count + " === SENT: " + Arrays.toString(sendData));
+		count++;
 	}
 
 	public void setAcked(short b) {
 		this.acked = b;
 	}
 
-	public void setPeedId(short valor) {
-		this.packetBuilder.setPeerId(valor);
+	public void setPeerId(short valor) {
+		this.minetestProtocol.setPeerId(valor);
+	}
+
+	/**
+	 * @return the minetestProtocol
+	 */
+	public MinetestProtocol getMinetestProtocol() {
+		return minetestProtocol;
+	}
+
+	/**
+	 * @param minetestProtocol the minetestProtocol to set
+	 */
+	public void setMinetestProtocol(MinetestProtocol minetestProtocol) {
+		this.minetestProtocol = minetestProtocol;
 	}
 }
