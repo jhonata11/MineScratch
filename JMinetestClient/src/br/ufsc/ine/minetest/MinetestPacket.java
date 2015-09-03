@@ -1,4 +1,4 @@
-package br.ufsc.ine.models;
+package br.ufsc.ine.minetest;
 
 import java.util.ArrayList;
 import java.util.Arrays;

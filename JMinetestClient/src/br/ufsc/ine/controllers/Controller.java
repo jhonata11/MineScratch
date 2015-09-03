@@ -5,11 +5,11 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
 import br.ufsc.ine.minetest.Connector;
+import br.ufsc.ine.minetest.MinetestPacket;
 import br.ufsc.ine.minetest.exceptions.HostFormatException;
 import br.ufsc.ine.minetest.exceptions.PasswordLimitExcededException;
 import br.ufsc.ine.minetest.exceptions.PortFormatException;
 import br.ufsc.ine.minetest.exceptions.UsernameLimitExcededException;
-import br.ufsc.ine.models.MinetestPacket;
 
 public class Controller {
 

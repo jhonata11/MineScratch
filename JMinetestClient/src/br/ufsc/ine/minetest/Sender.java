@@ -6,8 +6,6 @@ import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import br.ufsc.ine.models.MinetestPacket;
-
 public class Sender{
 
 	private static final short SEQNUM_INITIAL = (short) 65500;
