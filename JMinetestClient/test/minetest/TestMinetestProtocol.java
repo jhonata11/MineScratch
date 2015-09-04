@@ -2,6 +2,8 @@ package minetest;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.concurrent.Semaphore;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +18,7 @@ public class TestMinetestProtocol {
 
 	@Before
 	public void setUp() throws InterruptedException{
-		minetestProtocol = new MinetestProtocol(new Sender("192.168.0.14", 3000));
+		minetestProtocol = new MinetestProtocol(new Sender("192.168.0.14", 3000, new Semaphore(0)));
 	}
 	
 	@Test

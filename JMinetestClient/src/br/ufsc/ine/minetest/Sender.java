@@ -5,6 +5,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.concurrent.Semaphore;
 
 public class Sender{
 
@@ -17,9 +18,11 @@ public class Sender{
 	private short acked;
 	
 	int count = 0;
+	private Semaphore semaphore;
 
 
-	public Sender(String host, int port) throws InterruptedException {
+	public Sender(String host, int port, Semaphore semaphore) throws InterruptedException {
+		this.semaphore = semaphore;
 		this.seqNum = SEQNUM_INITIAL;
 		minetestProtocol = new MinetestProtocol(this);
 		
@@ -83,29 +86,26 @@ public class Sender{
 	private void send(MinetestPacket packet) throws Exception {
 		packet.addToHeader(minetestProtocol.createHeader());
 		byte[] sendData = packet.converToMessage();
-		
         sendDataToServer(sendData);
 	}
 
 	
 	private void sendDataToServer(byte[] sendData) throws Exception {
+		semaphore.acquire();
         InetAddress address = InetAddress.getByName(this.host);
         DatagramPacket packet3 = new DatagramPacket(sendData, sendData.length, address, this.port);
         DatagramSocket datagramSocket = new DatagramSocket(this.port);
         datagramSocket.send(packet3);
         datagramSocket.close();
         
-		System.out.println(count + " === SENT: " + Arrays.toString(sendData));
+//		System.out.println(count + " === SENT: " + Arrays.toString(sendData));
 		count++;
+		semaphore.release();
 	}
 
 	public void setAcked(short b) {
 		this.acked = b;
 	}
-
-//	public void setPeerId(short valor) {
-//		this.minetestProtocol.setPeerId(valor);
-//	}
 
 	/**
 	 * @return the minetestProtocol
@@ -119,5 +119,9 @@ public class Sender{
 	 */
 	public void setMinetestProtocol(MinetestProtocol minetestProtocol) {
 		this.minetestProtocol = minetestProtocol;
+	}
+	
+	public Semaphore getSemaphore(){
+		return this.semaphore;
 	}
 }

@@ -17,40 +17,41 @@ public class Controller {
 	private static final int PASSWORD_LIMIT_LENGTH = 20;
 	private Connector connector;
 
-	public void startConnection(String host, String port, String username, String password) throws InterruptedException, Exception, UnknownHostException {
+	public void connectToMinetest(String host, String port, String username, String password) throws InterruptedException, Exception, UnknownHostException {
 		this.verifyArguments(host, port, username, password);
 
 		this.connector = new Connector(host, Integer.parseInt(port), username, password);
 		this.connector.connect();
+		
 
-		System.out.printf("Listening on udp:%s:%s\n", host, port);
-				int a = 1;
-				while (a < 95) {
-					try {
-						connector.listen();
-						System.out.println(a);
-						a++;
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-				
-
-				byte[] encoded = Charset.forName("UTF-16BE").encode("teste").array();
-				byte[] chat = ByteBuffer.allocate(2).putShort((short) 0x32).array();
-				byte[] tamanho = ByteBuffer.allocate(2).putShort((short) encoded.length).array();
-
-				MinetestPacket packet = new MinetestPacket();
-				packet.addToBodyStart(chat);
-				packet.addToBodyEnd(chat);
-				packet.addToBodyEnd(encoded);
-
-				try {
-					connector.getSender().sendCommand(packet);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+//		System.out.printf("Listening on udp:%s:%s\n", host, port);
+//				int a = 1;
+//				while (a < 95) {
+//					try {
+//						connector.listen();
+//						System.out.println(a);
+//						a++;
+//					} catch (Exception e) {
+//						e.printStackTrace();
+//					}
+//				}
+//				
+//
+//				byte[] encoded = Charset.forName("UTF-16BE").encode("teste").array();
+//				byte[] chat = ByteBuffer.allocate(2).putShort((short) 0x32).array();
+//				byte[] tamanho = ByteBuffer.allocate(2).putShort((short) encoded.length).array();
+//
+//				MinetestPacket packet = new MinetestPacket();
+//				packet.addToBodyStart(chat);
+//				packet.addToBodyEnd(chat);
+//				packet.addToBodyEnd(encoded);
+//
+//				try {
+//					connector.getSender().sendCommand(packet);
+//				} catch (Exception e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 
 
 	}

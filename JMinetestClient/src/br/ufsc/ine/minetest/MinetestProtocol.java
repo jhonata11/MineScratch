@@ -108,7 +108,7 @@ public class MinetestProtocol {
 		byte type = packet[0];
 		byte[] data = ArrayUtils.subarray(packet, 1, packet.length);
 
-		System.out.println("TYPE: " + type);
+//		System.out.println("TYPE: " + type);
 		if (type == RELIABLE) {
 			reliable(data);
 		} else if (type == CONTROL) {
@@ -165,6 +165,13 @@ public class MinetestProtocol {
 		short seqnum = Utils.byteToShort(seq);
 		sender.ack(seqnum);
 		this.processPacket(ArrayUtils.subarray(data, 2, data.length));
+	}
+	
+	public byte[] receiveCommand(){
+		if(this.receiveBuffer.peek() != null){
+			return this.receiveBuffer.poll();
+		}
+		return null;
 	}
 
 	/**

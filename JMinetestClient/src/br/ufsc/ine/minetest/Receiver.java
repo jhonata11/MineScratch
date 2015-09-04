@@ -2,14 +2,20 @@ package br.ufsc.ine.minetest;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.util.Arrays;
+import java.util.concurrent.Semaphore;
 
-public class Receiver {
+public class Receiver implements Runnable{
 	
 
 	private MinetestProtocol minetestProtocol;
+	private Semaphore semaphore;
+	private int port;
 
-	public Receiver(MinetestProtocol minetest) {
+	public Receiver(MinetestProtocol minetest, Semaphore semaphore, int port) {
 		this.minetestProtocol = minetest;
+		this.semaphore = semaphore;
+		this.port = port;
 	}
 
 	public void listen(int port) throws Exception {
@@ -17,6 +23,7 @@ public class Receiver {
 	}
 
 	private void receiveAndProcess(int port) throws Exception {
+		semaphore.acquire();
 		DatagramSocket serverSocket = new DatagramSocket(port);
 		byte[] initial = new byte[1024];
 		DatagramPacket packet = new DatagramPacket(initial, initial.length);
@@ -29,6 +36,18 @@ public class Receiver {
 		byte[] bodyContent = this.minetestProtocol.receiveAndProcess(receivedData);
 		
 		serverSocket.close();
+		semaphore.release();
 		minetestProtocol.processPacket(bodyContent);
+	}
+
+	@Override
+	public void run() {
+		while (true){
+			try {
+				listen(port);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
