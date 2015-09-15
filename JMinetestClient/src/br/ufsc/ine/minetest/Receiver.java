@@ -2,7 +2,6 @@ package br.ufsc.ine.minetest;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.util.Arrays;
 import java.util.concurrent.Semaphore;
 
 public class Receiver implements Runnable{
@@ -29,7 +28,6 @@ public class Receiver implements Runnable{
 		DatagramPacket packet = new DatagramPacket(initial, initial.length);
 		serverSocket.receive(packet);
 		byte[] receivedData = new byte[packet.getLength()];
-
 		System.arraycopy(packet.getData(), packet.getOffset(), receivedData, 0, packet.getLength());
 //		System.out.println("RECEIVED: " + Arrays.toString(receivedData));
 		

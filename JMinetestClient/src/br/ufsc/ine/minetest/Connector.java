@@ -7,7 +7,7 @@ import java.util.concurrent.Semaphore;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import br.ufsc.ine.scratch.Client;
+import br.ufsc.ine.scratch.ScratchClient;
 import br.ufsc.ine.utils.Utils;
 
 public class Connector {
@@ -39,7 +39,7 @@ public class Connector {
 		receiverThread.start();
 		
 		
-		Client client = new Client(this.sender);
+		ScratchClient client = new ScratchClient(this.sender);
 		Thread scratchThread = new Thread(client);
 		scratchThread.start();
 		

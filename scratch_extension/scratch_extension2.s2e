@@ -1,0 +1,46 @@
+{
+    "extensionName": "Avatar do Minetest",
+    "extensionPort": 50210,
+    "blockSpecs": [
+         [
+            "",
+            "Andar para frente %n passos",
+            "andar_para_frente",
+            "PASSOS",
+            1
+        ],
+         [
+            "",
+            "Girar para esquerda",
+            "girar_para_esquerda"
+        ],
+
+        [
+            "",
+            "Girar para direita",
+            "girar_para_direita"
+        ],
+
+        [
+            "",
+            "Girar para tras",
+            "girar_para_tras"
+        ],
+
+        [
+            "",
+            "Criar bot %s",
+            "criar_bot",
+            "NOME",
+            "null"
+        ],
+
+        [
+            "",
+            "Destruir bot",
+            "destruir_bot"
+        ]
+
+
+    ]
+} 
