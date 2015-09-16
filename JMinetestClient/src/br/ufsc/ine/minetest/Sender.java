@@ -103,9 +103,6 @@ public class Sender {
 
 		count++;
 		semaphore.release();
-		this.sendDataToServer(sendData);
-
-		semaphore.release();
 	}
 
 	public void setAcked(short b) {
