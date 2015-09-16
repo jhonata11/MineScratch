@@ -9,6 +9,5 @@
 			<attribute name="javadoc_location" value="file:/C:/Users/jhona_000/Google%20Drive/code/java/JMinetestClient/lib/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/javax.ws.rs-api-2.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

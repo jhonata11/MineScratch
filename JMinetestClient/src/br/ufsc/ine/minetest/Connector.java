@@ -31,7 +31,7 @@ public class Connector {
 		receiver = new Receiver(sender.getMinetestProtocol(), semaphore, port);
 	}
 
-	public void connect() throws Exception{
+	public void connect() throws Exception{	
 		this.sender.startHandshake(username, password);
 		this.sender.startReliableConnection();
 		
