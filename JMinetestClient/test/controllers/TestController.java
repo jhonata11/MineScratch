@@ -56,7 +56,7 @@ public class TestController {
 	@Test
 	public void testConnection() throws Exception {
 		controller = new Controller();
-		controller.connectToMinetest("192.168.0.14", "30000", "jhonata11", "senha");
+		controller.connectToMinetest("192.168.0.16", "30000", "jhonata11", "senha");
 	}
 	
 	@Test
