@@ -10,9 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JTextArea;
-import javax.swing.SwingConstants;
 
 import br.ufsc.ine.controllers.Controller;
 import br.ufsc.ine.utils.PrettyPrinter;
@@ -31,6 +29,7 @@ public class MainWindow extends JFrame {
 	private PlaceholderTextField passwordTextField;
 	
 	private Thread connectionThread;
+	private boolean loggedIn;
 	public MainWindow() {
 		connectionThread = new Thread(new Runnable() {
 			@Override
@@ -61,7 +60,6 @@ public class MainWindow extends JFrame {
 		usernameTextField.setText("jhonata11");
 		passwordTextField.setText("senha");
 
-		panel.add(new JSeparator(SwingConstants.HORIZONTAL));
 		panel.add(scrollPane);
 		panel.add(startButton);
 		panel.add(stopButton);
@@ -93,11 +91,9 @@ public class MainWindow extends JFrame {
 		startButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(connectionThread.isInterrupted()){
-					connectionThread.run();
-				}else {
+				if(!loggedIn)
 					connectionThread.start();
-				}
+					loggedIn = true;
 			}
 		});
 
@@ -113,8 +109,12 @@ public class MainWindow extends JFrame {
 
 	protected void disconnectMinetest() {
 		try {
-			this.controller.disconnect();
-			connectionThread.interrupt();
+			if(loggedIn){
+				this.controller.disconnect();
+				connectionThread.interrupt();
+				loggedIn = false;
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -127,6 +127,7 @@ public class MainWindow extends JFrame {
 		String password = passwordTextField.getText();
 		try {
 			controller.connectToMinetest(host, port, username, password);
+			loggedIn = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -136,8 +137,12 @@ public class MainWindow extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				// disconnectMinetest();
-				e.getWindow().dispose();
+				try {
+					disconnectMinetest();
+				} finally {
+					e.getWindow().dispose();
+				}
+				
 			}
 		});
 		this.pack();
