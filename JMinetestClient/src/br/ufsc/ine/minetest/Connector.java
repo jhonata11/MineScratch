@@ -1,13 +1,12 @@
 package br.ufsc.ine.minetest;
 
-import java.nio.channels.ShutdownChannelGroupException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.concurrent.Semaphore;
 
 import org.apache.commons.lang3.ArrayUtils;
 
 import br.ufsc.ine.scratch.ScratchClient;
+import br.ufsc.ine.utils.PrettyPrinter;
 import br.ufsc.ine.utils.Utils;
 
 public class Connector {
@@ -20,6 +19,7 @@ public class Connector {
 	private String password;
 	
 	private Semaphore semaphore;
+	private PrettyPrinter printer;
 
 	public Connector(String host, int port, String username, String password) throws InterruptedException {
 		this.port = port;
@@ -37,27 +37,27 @@ public class Connector {
 		
 		Thread receiverThread = new Thread(receiver);
 		receiverThread.start();
-		
-		
+
 		ScratchClient client = new ScratchClient(this.sender);
 		Thread scratchThread = new Thread(client);
 		scratchThread.start();
 		
 		while(true){
-			receberMensagens();
+			receiveMessage();
 		}
 		
 		
 	}
 
-	private void receberMensagens() {
+	private void receiveMessage() {
 		byte[] receiveCommand = sender.getMinetestProtocol().receiveCommand();
 
 		if(receiveCommand != null && receiveCommand.length >=2){
 			short tipo = Utils.byteToShort(ArrayUtils.subarray(receiveCommand, 0, 2));
 			if(tipo == 0x30){
 				String str = new String(ArrayUtils.subarray(receiveCommand, 2, receiveCommand.length), StandardCharsets.UTF_16BE);
-				System.out.println("Minetest: "+str);
+				
+				printer.print("Minetest", str);
 			}
 		}
 	}
@@ -96,5 +96,9 @@ public class Connector {
 	 */
 	public void setSender(Sender sender) {
 		this.sender = sender;
+	}
+
+	public void setPrinter(PrettyPrinter printer) {
+		this.printer = printer;
 	}
 }

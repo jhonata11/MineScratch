@@ -35,3 +35,4 @@ local.properties
 .classpath
 .settings/
 .loadpath
+.recommenders

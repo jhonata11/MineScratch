@@ -1,27 +1,31 @@
 package br.ufsc.ine.controllers;
 
 import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 
 import br.ufsc.ine.minetest.Connector;
-import br.ufsc.ine.minetest.MinetestPacket;
 import br.ufsc.ine.minetest.exceptions.HostFormatException;
 import br.ufsc.ine.minetest.exceptions.PasswordLimitExcededException;
 import br.ufsc.ine.minetest.exceptions.PortFormatException;
 import br.ufsc.ine.minetest.exceptions.UsernameLimitExcededException;
+import br.ufsc.ine.utils.PrettyPrinter;
 
 public class Controller {
 
 	private static final int USERNAME_LIMIT_LENGTH = 20;
 	private static final int PASSWORD_LIMIT_LENGTH = 20;
 	private Connector connector;
+	private PrettyPrinter printer;
 
 	public void connectToMinetest(String host, String port, String username, String password) throws InterruptedException, Exception, UnknownHostException {
 		this.verifyArguments(host, port, username, password);
 
 		this.connector = new Connector(host, Integer.parseInt(port), username, password);
+		this.connector.setPrinter(printer);
 		this.connector.connect();
+	}
+	
+	public void disconnect() throws Exception{
+		this.connector.disconnect();
 	}
 
 	public void verifyArguments(String host, String port, String username, String password)
@@ -60,6 +64,14 @@ public class Controller {
 		if (!host.matches(ipPattern)) {
 			throw new HostFormatException();
 		}
+	}
+
+	public PrettyPrinter getPrinter() {
+		return printer;
+	}
+
+	public void setPrinter(PrettyPrinter printer) {
+		this.printer = printer;
 	}
 
 }
