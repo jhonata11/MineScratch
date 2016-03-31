@@ -34,7 +34,7 @@ public class TestMinetestPacket {
 		byte[] header = ByteBuffer.allocate(4).putInt(0).array();
 		byte[] body = ByteBuffer.allocate(4).putInt(1).array();
 		minetestPacket.addToHeader(header);
-		minetestPacket.addToBodyStart(body);
+		minetestPacket.appendFirst(body);
 		byte[] packet = this.minetestPacket.converToMessage();
 		
 		assertEquals(Arrays.toString(Utils.concatenateBytes(header, body)), Arrays.toString(packet));
@@ -47,8 +47,8 @@ public class TestMinetestPacket {
 		byte[] bodyEnd = ByteBuffer.allocate(4).putInt(2).array();
 		
 		minetestPacket.addToHeader(header);
-		minetestPacket.addToBodyStart(bodyBegin);
-		minetestPacket.addToBodyEnd(bodyEnd);
+		minetestPacket.appendFirst(bodyBegin);
+		minetestPacket.appendLast(bodyEnd);
 		byte[] packet = this.minetestPacket.converToMessage();
 		
 		assertEquals(Arrays.toString(Utils.concatenateBytes(header, bodyBegin, bodyEnd)), Arrays.toString(packet));
@@ -62,11 +62,11 @@ public class TestMinetestPacket {
 		byte[] body2 = ArrayUtils.clone(body);
 		
 		this.minetestPacket.addToHeader(header);
-		this.minetestPacket.addToBodyStart(body);
+		this.minetestPacket.appendFirst(body);
 		
 		MinetestPacket testPacket = new MinetestPacket();
 		testPacket.addToHeader(header2);
-		testPacket.addToBodyStart(body2);
+		testPacket.appendFirst(body2);
 		
 		assertEquals(testPacket, this.minetestPacket);
 	}
@@ -79,11 +79,11 @@ public class TestMinetestPacket {
 		byte[] body2 = ByteBuffer.allocate(4).putInt(3).array();
 		
 		this.minetestPacket.addToHeader(header);
-		this.minetestPacket.addToBodyStart(body);
+		this.minetestPacket.appendFirst(body);
 		
 		MinetestPacket testPacket = new MinetestPacket();
 		testPacket.addToHeader(header2);
-		testPacket.addToBodyStart(body2);
+		testPacket.appendFirst(body2);
 		
 		assertNotEquals(testPacket, this.minetestPacket);
 	}

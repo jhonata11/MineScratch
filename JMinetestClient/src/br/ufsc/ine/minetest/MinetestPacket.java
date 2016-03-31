@@ -29,14 +29,14 @@ public class MinetestPacket {
 		this.header.add(byteToAdd);
 	}
 
-	public void addToBodyStart(byte[] byteToAdd) {
+	public void appendFirst(byte[] byteToAdd) {
 		List<byte[]> aux = new ArrayList<>();
 		aux.addAll(Arrays.asList(byteToAdd));
 		aux.addAll(this.body);
 		this.body = aux;
 	}
 	
-	public void addToBodyEnd(byte[] byteToAdd) {
+	public void appendLast(byte[] byteToAdd) {
 		List<byte[]> aux = new ArrayList<>();
 		aux.addAll(this.body);
 		aux.addAll(Arrays.asList(byteToAdd));

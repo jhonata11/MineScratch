@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import br.ufsc.ine.controllers.Controller;
+import br.ufsc.ine.controllers.ViewController;
 import br.ufsc.ine.utils.PrettyPrinter;
 
 public class MainWindow extends JFrame {
@@ -22,7 +22,7 @@ public class MainWindow extends JFrame {
 	private JButton stopButton;
 	private JTextArea outputConsole;
 	private JScrollPane scrollPane;
-	private Controller controller;
+	private ViewController controller;
 	private PlaceholderTextField hostaddressTextField;
 	private PlaceholderTextField portNumberTextField;
 	private PlaceholderTextField usernameTextField;
@@ -42,7 +42,7 @@ public class MainWindow extends JFrame {
 		definePanel();
 		addToPanel();
 
-		controller = new Controller();
+		controller = new ViewController();
 		PrettyPrinter printer = new PrettyPrinter();
 		printer.setTextArea(outputConsole);
 		controller.setPrinter(printer);
@@ -55,7 +55,7 @@ public class MainWindow extends JFrame {
 		panel.add(usernameTextField);
 		panel.add(passwordTextField);
 
-		hostaddressTextField.setText("192.168.0.14");
+		hostaddressTextField.setText("192.168.0.17");
 		portNumberTextField.setText("30000");
 		usernameTextField.setText("jhonata11");
 		passwordTextField.setText("senha");
@@ -78,12 +78,12 @@ public class MainWindow extends JFrame {
 		passwordTextField.setPlaceholder("Senha");
 
 		outputConsole = new JTextArea(20, 50);
-		outputConsole.setEditable(true);
+		outputConsole.setEditable(false);
 		outputConsole.setLineWrap(true);
 
 		scrollPane = new JScrollPane(outputConsole);
 
-		panel.setPreferredSize(new Dimension(584, 430));
+		panel.setPreferredSize(new Dimension(440, 430));
 	}
 
 	private void defineButtons() {

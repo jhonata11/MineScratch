@@ -12,7 +12,7 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.ufsc.ine.controllers.Controller;
+import br.ufsc.ine.controllers.ViewController;
 import br.ufsc.ine.minetest.exceptions.HostFormatException;
 import br.ufsc.ine.minetest.exceptions.PasswordLimitExcededException;
 import br.ufsc.ine.minetest.exceptions.PortFormatException;
@@ -21,11 +21,11 @@ import br.ufsc.ine.utils.Utils;
 
 public class TestController {
 	
-	private Controller controller;
+	private ViewController controller;
 	
 	@Before
 	public void setUp(){
-		controller = new Controller();
+		controller = new ViewController();
 	}
 
 	@Test (expected = HostFormatException.class)
@@ -55,7 +55,7 @@ public class TestController {
 	
 	@Test
 	public void testConnection() throws Exception {
-		controller = new Controller();
+		controller = new ViewController();
 		controller.connectToMinetest("192.168.0.14", "30000", "jhonata11", "senha");
 	}
 	

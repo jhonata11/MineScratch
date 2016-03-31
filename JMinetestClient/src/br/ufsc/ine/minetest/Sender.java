@@ -4,7 +4,10 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.concurrent.Semaphore;
+
+import br.ufsc.ine.utils.Utils;
 
 public class Sender{
 
@@ -38,21 +41,21 @@ public class Sender{
 	public void startHandshake(String username, String password) throws Exception {
 		MinetestPacket packet = new MinetestPacket();
 		byte[] initialHandshakeBytes = minetestProtocol.createHandshakePacket(username, password);
-		packet.addToBodyStart(initialHandshakeBytes);
+		packet.appendFirst(initialHandshakeBytes);
 		this.sendCommand(packet);
 	}
 
 	public void handShakeEnd() throws Exception {
 		byte[] toServerInit2 = ByteBuffer.allocate(2).putShort((short) 0x11).array();
 		MinetestPacket a = new MinetestPacket();
-		a.addToBodyStart(toServerInit2);
+		a.appendFirst(toServerInit2);
 		
 		this.sendCommand(a);
 	}
 	
 	public void disconnect() throws Exception{
 		MinetestPacket packet = new MinetestPacket();
-		packet.addToBodyStart(this.minetestProtocol.disconnect());
+		packet.appendFirst(this.minetestProtocol.disconnect());
 		this.send(packet);
 	}
 	
@@ -62,7 +65,7 @@ public class Sender{
 	
 	public void ack(short seqnum) throws Exception{
 		MinetestPacket packet = new MinetestPacket();
-		packet.addToBodyEnd(minetestProtocol.createAckPackage(seqnum));
+		packet.appendLast(minetestProtocol.createAckPackage(seqnum));
 		this.send(packet);
 	}
 
@@ -72,12 +75,12 @@ public class Sender{
 	 * @throws Exception 
 	 */
 	public void sendCommand(MinetestPacket packet) throws Exception {
-		packet.addToBodyStart(minetestProtocol.createCommandByte());
+		packet.appendFirst(minetestProtocol.createCommandByte());
 		this.sendReliable(packet);
 	}
 
 	private void sendReliable(MinetestPacket packet) throws Exception {
-		packet.addToBodyStart(minetestProtocol.createReliableBytes(this.seqNum));
+		packet.appendFirst(minetestProtocol.createReliableBytes(this.seqNum));
 		this.seqNum++;
 		this.send(packet);
 	}
@@ -90,14 +93,19 @@ public class Sender{
 
 	
 	private void sendDataToServer(byte[] sendData) throws Exception {
+			for (byte c: sendData) {
+				System.out.println(Utils.integerToBinary(c));
+			}
+			System.out.println("====");
+		
+		
 		semaphore.acquire();
         InetAddress address = InetAddress.getByName(this.host);
-        DatagramPacket packet3 = new DatagramPacket(sendData, sendData.length, address, this.port);
+        DatagramPacket packet = new DatagramPacket(sendData, sendData.length, address, this.port);
         DatagramSocket datagramSocket = new DatagramSocket(this.port);
-        datagramSocket.send(packet3);
+        datagramSocket.send(packet);
         datagramSocket.close();
         
-//		System.out.println(count + " === SENT: " + Arrays.toString(sendData));
 		count++;
 		semaphore.release();
 	}

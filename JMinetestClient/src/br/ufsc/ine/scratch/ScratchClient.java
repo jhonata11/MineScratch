@@ -6,13 +6,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
-import br.ufsc.ine.minetest.MinetestPacket;
+import br.ufsc.ine.controllers.MinetestController;
 import br.ufsc.ine.minetest.Sender;
+import br.ufsc.ine.minetest.models.TeleportCoordinates;
 
 public class ScratchClient implements Runnable {
 
@@ -30,26 +28,17 @@ public class ScratchClient implements Runnable {
 		this.botName = name == "null" ? randomName : name;
 		System.out.println(name);
 		String mensagem = String.format("bot %s criar", this.botName);
-		sendMessage(mensagem);		
+		new MinetestController(sender).sendChatMessage(mensagem);
 	}
 
 	public void listen(ServerSocket serverSocket) throws Exception {
 		
-		// création de la socket
-		// int port = 50210;
-		// ServerSocket serverSocket = new ServerSocket(port);
-		// System.err.println("Servidor iniciado na porta : " + port);
-
-		// repeatedly wait for connections, and process
-		// on reste bloqué sur l'attente d'une demande client
 		Socket clientSocket = serverSocket.accept();
-		// System.err.println("Cliente conectado");
 
-		// on ouvre un flux de converation
 		BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
 
-		// Inicializacao variaveis.
+		// Iniciando vairáveis.
 		String s;
 		StringBuilder message = new StringBuilder();
 		Command comando = new Command();
@@ -119,8 +108,6 @@ public class ScratchClient implements Runnable {
 			eraseBot();
 		}
 
-
-		// System.err.println("Conexao com o cliente terminada");
 		out.flush();
 		out.close();
 		in.close();
@@ -130,47 +117,29 @@ public class ScratchClient implements Runnable {
 
 	private void eraseBot() {
 		String mensagem = String.format("bot %s destruir", this.botName);
-		sendMessage(mensagem);
+		new MinetestController(sender).sendChatMessage(mensagem);
 	}
 
 	private void moveRight() {
 		String mensagem = String.format("bot %s mover direita", this.botName);
-		sendMessage(mensagem);
+		new MinetestController(sender).sendChatMessage(mensagem);
 	}
 
 	private void moveLeft() {
 		String mensagem = String.format("bot %s mover esquerda", this.botName);
-		sendMessage(mensagem);
+		new MinetestController(sender).sendChatMessage(mensagem);
 	}
 
 	private void moveFoward() {
 		String mensagem = String.format("bot %s mover frente", this.botName);
-		sendMessage(mensagem);
+		new MinetestController(sender).sendChatMessage(mensagem);
 	}
 
-	private void sendMessage(String mensagem) {
-		byte[] encoded = Charset.forName("UTF-16BE").encode(mensagem).array();
-		byte[] chat = ByteBuffer.allocate(2).putShort((short) 0x32).array();
-		byte[] tamanho = ByteBuffer.allocate(2).putShort((short) mensagem.getBytes().length).array();
-
-		MinetestPacket packet = new MinetestPacket();
-		packet.addToBodyStart(chat);
-		packet.addToBodyEnd(tamanho);
-		packet.addToBodyEnd(encoded);
-
-		try {
-			this.sender.sendCommand(packet);
-			String str = new String(encoded, StandardCharsets.UTF_16BE);
-
-			System.err.println("======== mensagem enviada: " + str);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 	
 	private void moveBackward() {
-		String mensagem = String.format("bot %s mover tras", this.botName);
-		sendMessage(mensagem);
+		TeleportCoordinates coordinates = new TeleportCoordinates();
+		coordinates.setPosition(20, 20, 20);
+		new MinetestController(sender).teleport(coordinates);
 	}
 
 	@Override
@@ -185,9 +154,7 @@ public class ScratchClient implements Runnable {
 				listen(serverSocket);
 			}
 
-		} catch (Exception e) {
-
-		}
+		} catch (Exception e) {}
 
 	}
 }
