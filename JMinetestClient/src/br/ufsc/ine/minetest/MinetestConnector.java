@@ -1,13 +1,6 @@
 package br.ufsc.ine.minetest;
 
-import java.nio.charset.StandardCharsets;
-import java.util.concurrent.Semaphore;
-
-import org.apache.commons.lang3.ArrayUtils;
-
-import br.ufsc.ine.scratch.ScratchClient;
 import br.ufsc.ine.utils.PrettyPrinter;
-import br.ufsc.ine.utils.Utils;
 
 public class MinetestConnector {
 
@@ -18,46 +11,19 @@ public class MinetestConnector {
 	private String username;
 	private String password;
 
-	private Semaphore semaphore;
-	private PrettyPrinter printer;
 
 	public MinetestConnector(String host, int port, String username, String password) throws InterruptedException {
 		this.port = port;
 		this.username = username;
 		this.password = password;
-		this.semaphore = new Semaphore(1);
-
-		sender = new Sender(host, port, semaphore);
-		receiver = new Receiver(sender.getMinetestProtocol(), semaphore, port);
 	}
 
 	public void connect() throws Exception {
 		this.sender.startHandshake(username, password);
 		this.sender.startReliableConnection();
-
 		Thread receiverThread = new Thread(receiver);
 		receiverThread.start();
 
-		ScratchClient client = new ScratchClient(this.sender);
-		Thread scratchThread = new Thread(client);
-		scratchThread.start();
-
-		while (true) {
-			receiveMessage();
-		}
-	}
-
-	private void receiveMessage() {
-		byte[] receiveCommand = sender.getMinetestProtocol().receiveCommand();
-		if (receiveCommand != null && receiveCommand.length >= 2) {
-			short tipo = Utils.byteToShort(ArrayUtils.subarray(receiveCommand, 0, 2));
-			if (tipo == 0x30) {
-				String str = new String(ArrayUtils.subarray(receiveCommand, 2, receiveCommand.length),
-						StandardCharsets.UTF_16BE);
-
-				printer.print("Minetest", str);
-			}
-		}
 	}
 
 	public void disconnect() throws Exception {
@@ -98,7 +64,7 @@ public class MinetestConnector {
 		this.sender = sender;
 	}
 
-	public void setPrinter(PrettyPrinter printer) {
-		this.printer = printer;
-	}
+//	public void setPrinter(PrettyPrinter printer) {
+//		this.printer = printer;
+//	}
 }

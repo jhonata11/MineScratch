@@ -54,11 +54,11 @@ public class TestController {
 		controller.verifyArguments("192.168.0.14", "30000", "jhonata", "camisa");
 	}
 	
-	@Ignore
+//	@Ignore
 	@Test
 	public void testConnection() throws Exception {
 		controller = new ViewController();
-		controller.connectToMinetest("192.168.0.14", "30000", "jhonata11", "senha");
+		controller.connectToMinetest("192.168.0.10", "30000", "jhonata11", "senha");
 	}
 
 	

@@ -93,10 +93,10 @@ public class Sender{
 
 	
 	private void sendDataToServer(byte[] sendData) throws Exception {
-			for (byte c: sendData) {
-				System.out.println(Utils.integerToBinary(c));
-			}
-			System.out.println("====");
+//			for (byte c: sendData) {
+//				System.out.println(Utils.integerToBinary(c));
+//			}
+//			System.out.println("====");
 		
 		
 		semaphore.acquire();
