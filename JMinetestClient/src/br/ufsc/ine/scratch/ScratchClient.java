@@ -10,7 +10,7 @@ import java.util.Date;
 
 import br.ufsc.ine.controllers.MinetestController;
 import br.ufsc.ine.minetest.Sender;
-import br.ufsc.ine.minetest.models.TeleportCoordinates;
+import br.ufsc.ine.minetest.models.Coordinate;
 
 public class ScratchClient implements Runnable {
 
@@ -137,7 +137,7 @@ public class ScratchClient implements Runnable {
 
 	
 	private void moveBackward() {
-		TeleportCoordinates coordinates = new TeleportCoordinates();
+		Coordinate coordinates = new Coordinate();
 		coordinates.setPosition(20, 20, 20);
 		new MinetestController(sender).teleport(coordinates);
 	}
