@@ -32,7 +32,6 @@ public class MinetestClient {
 	private PlayerInfo playerInfo;
 	private MinetestConnector connector;
 	private Semaphore connectionSemaphore;
-	private Semaphore playerInfoSemaphore;
 
 	
 	
@@ -41,7 +40,6 @@ public class MinetestClient {
 		this.playerInfo = new PlayerInfo();
 		this.connector = new MinetestConnector(host, port, username, password);
 		this.connectionSemaphore = new Semaphore(1);
-		this.playerInfoSemaphore = new Semaphore(1);
 
 		sender = new Sender(host, port, connectionSemaphore);
 		receiver = new Receiver(sender.getMinetestProtocol(), connectionSemaphore, port);
@@ -54,7 +52,6 @@ public class MinetestClient {
 		this.connector.connect();
 		this.initScratch();
 		while (true) {
-//			this.playerInfoSemaphore.acquire();
 			receiveMessage();
 		}
 	}
@@ -89,7 +86,6 @@ public class MinetestClient {
 				this.playerInfo.getCoordinates().setPosition(new Float(x10000/(float)10000), new Float(y10000/(float)10000), new Float(z10000/(float)10000));
 				this.playerInfo.getCoordinates().setAngle(new Float(pitch1000/(float)1000), new Float(yaw1000/(float)1000));
 				
-//				this.playerInfoSemaphore.release();
 			}
 		}
 	}
