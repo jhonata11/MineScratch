@@ -62,10 +62,11 @@ public class ScratchClient implements Runnable {
 			
 			String valor = new String(comando.getStatus());
 			valor = valor.replaceAll("\\D+","");
-			
-			Integer passos = Integer.parseInt(valor);
-			for (int i = 0; i < passos; i++){
-				moveFoward();
+			try {
+				Integer passos = Integer.parseInt(valor);
+				this.moveFoward(passos);
+			} catch (NumberFormatException e){
+				this.moveFoward(1);
 			}
 
 		} else if (message.toString().contains("usar_ferramenta")) {
@@ -100,14 +101,13 @@ public class ScratchClient implements Runnable {
 //		new MinetestController(sender).sendChatMessage(mensagem);
 	}
 
-	private void moveFoward() {
-//		String mensagem = String.format("bot %s mover frente", this.botName);
-//		new MinetestController(sender).sendChatMessage(mensagem);
+	private void moveFoward(Integer steps) {
+		this.minetestClient.walk(steps);
 	}
 
 	
 	private void moveBackward() {
-		this.minetestClient.walk(1);
+//		this.minetestClient.walk(1);
 	}
 
 	@Override
