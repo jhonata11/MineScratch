@@ -78,7 +78,6 @@ public class ScratchClient implements Runnable {
 			System.out.println("esquerda");
 			moveLeft();
 		}else if(message.toString().contains("girar_para_direita")){	
-			System.out.println("direita");
 			moveRight();
 		} 
 		out.flush();
@@ -88,12 +87,8 @@ public class ScratchClient implements Runnable {
 
 	}
 
-
-
 	private void moveRight() {
-//		String mensagem = String.format("bot %s mover direita", this.botName);
-//		this.minetestClient.sendChatMessage(mensagem);
-//		new MinetestController(sender).sendChatMessage(mensagem);
+		this.minetestClient.turnRight(90);
 	}
 
 	private void moveLeft() {

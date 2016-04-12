@@ -103,6 +103,15 @@ public class MinetestClient {
 		sendCommand(packet);
 	}
 	
+	public void turnRight(Integer degrees){
+		Coordinate newCoordinate = new Coordinate();
+		
+		Coordinate coordinates = this.playerInfo.getCoordinates();
+		newCoordinate.setPosition(coordinates.getPosition().get(0), coordinates.getPosition().get(1), coordinates.getPosition().get(2));
+		newCoordinate.setAngle(coordinates.getAngle().get(0), coordinates.getAngle().get(1)+degrees);
+		this.teleport(newCoordinate);
+	}
+	
 	
 	public void move(Coordinate deltaPosition){
 		Coordinate coordinates = this.playerInfo.getCoordinates();
@@ -123,7 +132,6 @@ public class MinetestClient {
 		Coordinate coordinates = this.playerInfo.getCoordinates();
 		Float dx = new Float(distance * Math.cos((90 + coordinates.getAngle().get(1)) / 180 * Math.PI));
 		Float dz = new Float(distance * Math.sin((90 + coordinates.getAngle().get(1)) / 180 * Math.PI));
-		
 		Coordinate newPosition = new Coordinate();
 		newPosition.setPosition(dx, (float)0, dz);
 		
