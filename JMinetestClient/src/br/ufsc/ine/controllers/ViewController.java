@@ -14,13 +14,13 @@ public class ViewController {
 	private static final int USERNAME_LIMIT_LENGTH = 20;
 	private static final int PASSWORD_LIMIT_LENGTH = 20;
 	private MinetestConnector connector;
-	private ModelController controller;
+	private MinetestClient controller;
 	private PrettyPrinter printer;
 
 
 	public void connectToMinetest(String host, String port, String username, String password) throws InterruptedException, Exception, UnknownHostException {
 		this.verifyArguments(host, port, username, password);
-		this.controller = new ModelController(host, Integer.parseInt(port), username, password);
+		this.controller = new MinetestClient(host, Integer.parseInt(port), username, password);
 		this.controller.startApplication();
 //		this.connector = new MinetestConnector(host, Integer.parseInt(port), username, password);
 //		this.connector.setPrinter(printer);

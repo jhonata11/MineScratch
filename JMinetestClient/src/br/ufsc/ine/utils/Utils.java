@@ -11,6 +11,10 @@ public class Utils {
 		return ByteBuffer.wrap(arr, 0, 4).getInt();
 	}
 
+	public static double byteToFloat(byte[] arr) {
+		return ByteBuffer.wrap(arr).getFloat();
+	}
+
 	public static short byteToShort(byte[] arr) {
 		return ByteBuffer.wrap(arr, 0, 2).getShort();
 	}
@@ -25,18 +29,24 @@ public class Utils {
 
 	public static byte[] listToArray(List<byte[]> arrayList) {
 		byte[] toReturn = new byte[0];
-		
-		for (byte[] a: arrayList){
+
+		for (byte[] a : arrayList) {
 			toReturn = ArrayUtils.addAll(toReturn, a);
 		}
 		return toReturn;
 	}
-	
-	public static int unsignedShortToInt(short shortValue){
-		return shortValue >= 0 ? shortValue : 0x10000 + shortValue; 
+
+	public static int unsignedShortToInt(short shortValue) {
+		return shortValue >= 0 ? shortValue : 0x10000 + shortValue;
 	}
 
 	public static String integerToBinary(int i) {
 		return Integer.toBinaryString(i & 255 | 256).substring(1);
+	}
+	
+	public static void printArray(byte [] data){
+		for (byte b: data){
+			System.out.println(integerToBinary(b));
+		}
 	}
 }

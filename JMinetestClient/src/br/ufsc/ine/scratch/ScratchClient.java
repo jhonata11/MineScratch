@@ -6,30 +6,17 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Date;
 
-import br.ufsc.ine.controllers.MinetestController;
-import br.ufsc.ine.minetest.Sender;
-import br.ufsc.ine.minetest.models.Coordinate;
+import br.ufsc.ine.controllers.MinetestClient;
 
 public class ScratchClient implements Runnable {
+	
+	private MinetestClient minetestClient;
 
-	private Sender sender;
-	private String botName;
-
-	public ScratchClient(Sender sender) {
-		this.sender = sender;
-		this.botName = "";
-		
+	public ScratchClient(MinetestClient minetestClient) {
+		this.minetestClient = minetestClient;
 	}
 
-	private void createBot(String name) {
-		String randomName = new Date().toString().replaceAll(" ", "").replaceAll(":", "");
-		this.botName = name == "null" ? randomName : name;
-		System.out.println(name);
-		String mensagem = String.format("bot %s criar", this.botName);
-		new MinetestController(sender).sendChatMessage(mensagem);
-	}
 
 	public void listen(ServerSocket serverSocket) throws Exception {
 		
@@ -82,7 +69,7 @@ public class ScratchClient implements Runnable {
 			}
 
 		} else if (message.toString().contains("usar_ferramenta")) {
-			this.sender.disconnect();
+//			minetestClient.d().disconnect();
 		} else if(message.toString().contains("girar_para_tras")){
 			System.out.println("tras");
 			moveBackward();
@@ -92,22 +79,7 @@ public class ScratchClient implements Runnable {
 		}else if(message.toString().contains("girar_para_direita")){	
 			System.out.println("direita");
 			moveRight();
-		} else if(message.toString().contains("criar_bot")){
-			String[] linhas = message.toString().split("\n");
-			for (String linha : linhas) {
-				if (linha.contains("criar_bot")) {
-					String[] comandos = linha.split("/");
-					comando = new Command(comandos[1], comandos[2], comandos[3], comandos[4]);
-					break;
-				}
-			}
-			String valor = new String(comando.getStatus());
-			valor = valor.substring(0, valor.length()-5);
-			this.createBot(valor);
-		} else if (message.toString().contains("destruir_bot")) {
-			eraseBot();
-		}
-
+		} 
 		out.flush();
 		out.close();
 		in.close();
@@ -115,35 +87,32 @@ public class ScratchClient implements Runnable {
 
 	}
 
-	private void eraseBot() {
-		String mensagem = String.format("bot %s destruir", this.botName);
-		new MinetestController(sender).sendChatMessage(mensagem);
-	}
+
 
 	private void moveRight() {
-		String mensagem = String.format("bot %s mover direita", this.botName);
-		new MinetestController(sender).sendChatMessage(mensagem);
+//		String mensagem = String.format("bot %s mover direita", this.botName);
+//		this.minetestClient.sendChatMessage(mensagem);
+//		new MinetestController(sender).sendChatMessage(mensagem);
 	}
 
 	private void moveLeft() {
-		String mensagem = String.format("bot %s mover esquerda", this.botName);
-		new MinetestController(sender).sendChatMessage(mensagem);
+//		String mensagem = String.format("bot %s mover esquerda", this.botName);
+//		new MinetestController(sender).sendChatMessage(mensagem);
 	}
 
 	private void moveFoward() {
-		String mensagem = String.format("bot %s mover frente", this.botName);
-		new MinetestController(sender).sendChatMessage(mensagem);
+//		String mensagem = String.format("bot %s mover frente", this.botName);
+//		new MinetestController(sender).sendChatMessage(mensagem);
 	}
 
 	
 	private void moveBackward() {
-		Coordinate coordinates = new Coordinate();
-		coordinates.setPosition(20, 20, 20);
-		new MinetestController(sender).teleport(coordinates);
+		this.minetestClient.walk(1);
 	}
 
 	@Override
 	public void run() {
+		
 		try {
 			Thread.sleep(5000);
 			int port = 50210;

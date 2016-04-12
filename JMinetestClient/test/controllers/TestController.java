@@ -54,11 +54,18 @@ public class TestController {
 		controller.verifyArguments("192.168.0.14", "30000", "jhonata", "camisa");
 	}
 	
+	@Test
+	public void testName() throws Exception {
+		String string1 = "1111111111111111100000111101110000000000000000011000011010100000000000000000010010110010010000110000000000000000000101110111000000000000000000000001011101110000";
+		String string2 = "1111111111111111100000111101110000000000000000011000011010100000000000000000010010110010010000110000000000000000000101110111000000000000000000000001011101110000";
+		assertEquals(string1, string2);
+	}
+	
 //	@Ignore
 	@Test
 	public void testConnection() throws Exception {
 		controller = new ViewController();
-		controller.connectToMinetest("192.168.0.10", "30000", "jhonata11", "senha");
+		controller.connectToMinetest("192.168.0.10", "30000", "python", "senha");
 	}
 
 	
