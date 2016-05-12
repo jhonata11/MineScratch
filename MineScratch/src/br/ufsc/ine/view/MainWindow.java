@@ -126,7 +126,7 @@ public class MainWindow extends JFrame {
 		String username = usernameTextField.getText();
 		String password = passwordTextField.getText();
 		try {
-			controller.connectToMinetest(host, port, username, password);
+//			controller.connectToMinetest(host, port, username, password);
 			loggedIn = true;
 		} catch (Exception e) {
 			e.printStackTrace();

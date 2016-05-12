@@ -6,41 +6,28 @@
             "",
             "Andar para frente %n passos",
             "andar_para_frente",
-            "PASSOS",
             1
         ],
          [
             "",
-            "Girar para esquerda",
-            "girar_para_esquerda"
+            "Girar para esquerda %n graus",
+            "girar_para_esquerda",
+            90
         ],
 
         [
             "",
-            "Girar para direita",
-            "girar_para_direita"
+            "Girar para direita %n graus",
+            "girar_para_direita",
+            90
         ],
 
         [
             "",
             "Girar para tras",
             "girar_para_tras"
-        ],
-
-        [
-            "",
-            "Criar bot %s",
-            "criar_bot",
-            "NOME",
-            "null"
-        ],
-
-        [
-            "",
-            "Destruir bot",
-            "destruir_bot"
         ]
 
 
     ]
-} 
+}

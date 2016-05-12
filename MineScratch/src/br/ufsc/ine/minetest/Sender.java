@@ -4,10 +4,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
-import java.util.List;
 import java.util.concurrent.Semaphore;
-
-import br.ufsc.ine.utils.Utils;
 
 public class Sender{
 
@@ -93,12 +90,6 @@ public class Sender{
 
 	
 	private void sendDataToServer(byte[] sendData) throws Exception {
-//			for (byte c: sendData) {
-//				System.out.println(Utils.integerToBinary(c));
-//			}
-//			System.out.println("====");
-		
-		
 		semaphore.acquire();
         InetAddress address = InetAddress.getByName(this.host);
         DatagramPacket packet = new DatagramPacket(sendData, sendData.length, address, this.port);

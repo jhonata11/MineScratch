@@ -14,13 +14,15 @@ import br.ufsc.ine.minetest.Receiver;
 import br.ufsc.ine.minetest.Sender;
 import br.ufsc.ine.minetest.models.Coordinate;
 import br.ufsc.ine.minetest.models.PlayerInfo;
-import br.ufsc.ine.scratch.ScratchClient;
+import br.ufsc.ine.scratch.Scratch;
 import br.ufsc.ine.utils.Utils;
 
 public class MinetestClient {
 
 	private static final short TO_SERVER_CHAT_MESSAGE = 0x32;
 	private static final short TO_SERVER_PLAYER_POSITION = 0x23;
+	private static final short TO_SERVER_PLAYERITEM = 0x37;
+	private static final short TOSERVER_INTERACT = 0x39;
 	
 	private static final short TO_CLIENT_CHAT_MESSAGE = 0x30;
 	private static final short TO_CLIENT_MOVE_PLAYER = 0x34;
@@ -33,6 +35,7 @@ public class MinetestClient {
 	private MinetestConnector connector;
 	private Semaphore connectionSemaphore;
 
+	private Scratch scratch;
 	
 	
 
@@ -46,11 +49,11 @@ public class MinetestClient {
 		
 	}
 	
-	public void startApplication() throws Exception{
+	public void startApplication(Scratch scratch) throws Exception{
 		this.connector.setSender(sender);
 		this.connector.setReceiver(receiver);
 		this.connector.connect();
-		this.initScratch();
+		this.initScratch(scratch);
 		while (true) {
 			receiveMessage();
 		}
@@ -58,9 +61,8 @@ public class MinetestClient {
 	
 	
 	
-	private void initScratch(){
-		ScratchClient client = new ScratchClient(this);
-		Thread scratchThread = new Thread(client);
+	private void initScratch(Scratch scratch){
+		Thread scratchThread = new Thread(scratch);
 		scratchThread.start();
 	}
 	
@@ -85,7 +87,7 @@ public class MinetestClient {
 				
 				this.playerInfo.getCoordinates().setPosition(new Float(x10000/(float)10000), new Float(y10000/(float)10000), new Float(z10000/(float)10000));
 				this.playerInfo.getCoordinates().setAngle(new Float(pitch1000/(float)1000), new Float(yaw1000/(float)1000));
-				
+				printCoordinate(this.playerInfo.getCoordinates());
 			}
 		}
 	}
@@ -105,10 +107,19 @@ public class MinetestClient {
 	
 	public void turnRight(Integer degrees){
 		Coordinate newCoordinate = new Coordinate();
+		Coordinate playerCoordinates = this.playerInfo.getCoordinates();
+		newCoordinate.setPosition(playerCoordinates.getPosition().get(0), playerCoordinates.getPosition().get(1), playerCoordinates.getPosition().get(2));
+		newCoordinate.setAngle(playerCoordinates.getAngle().get(0), playerCoordinates.getAngle().get(1)+degrees);
+		
+		this.teleport(newCoordinate);
+	}
+	
+	public void turnLeft(Integer degrees){
+		Coordinate newCoordinate = new Coordinate();
 		
 		Coordinate coordinates = this.playerInfo.getCoordinates();
 		newCoordinate.setPosition(coordinates.getPosition().get(0), coordinates.getPosition().get(1), coordinates.getPosition().get(2));
-		newCoordinate.setAngle(coordinates.getAngle().get(0), coordinates.getAngle().get(1)+degrees);
+		newCoordinate.setAngle(coordinates.getAngle().get(0), coordinates.getAngle().get(1)+(degrees * -1));
 		this.teleport(newCoordinate);
 	}
 	
@@ -142,25 +153,49 @@ public class MinetestClient {
 	public void teleport(Coordinate newCoordinate) {
 		MinetestPacket packet = this.createPacket(TO_SERVER_PLAYER_POSITION);
 		List<Float> position = newCoordinate.getPosition();
-		List<Float> angle = newCoordinate.getAngle();
 		List<Float> speed = newCoordinate.getSpeed();
+		List<Float> angle = newCoordinate.getAngle();
 		
 		position.forEach((number) -> allocateBytes(packet, new Integer(number.intValue() * 1000)));
-		angle.forEach((number) -> allocateBytes(packet, new Integer(number.intValue()* 100)));
 		speed.forEach((number) -> allocateBytes(packet, new Integer(number.intValue()* 100)));
+		angle.forEach((number) -> allocateBytes(packet, new Integer(number.intValue()* 100)));
 		
 		this.playerInfo.getCoordinates().setPosition(position);
-		this.playerInfo.getCoordinates().setAngle(angle);
 		this.playerInfo.getCoordinates().setSpeed(speed);
-		
-		System.out.println("teleport: ");
-		System.out.println(String.format("posição: %s %s %s",position.get(0),position.get(1),position.get(2)));
-		System.out.println(String.format("velocidade: %s %s %s",speed.get(0),speed.get(1),speed.get(2)));
-		System.out.println(String.format("angulo: %s %s",angle.get(0),angle.get(1)));
-
+		this.playerInfo.getCoordinates().setAngle(angle);
 		
 		packet.appendLast(ByteBuffer.allocate(4).putInt(0x01).array());
 		sendCommand(packet);
+	}
+	
+	public void changePlayerItem(short item){
+		MinetestPacket packet = this.createPacket(TOSERVER_INTERACT);
+		byte[] selectedItem = ByteBuffer.allocate(2).putShort((short) item).array();
+		packet.appendLast(selectedItem);
+		
+		sendCommand(packet);
+	}
+	
+	public void interact(){
+		MinetestPacket packet = this.createPacket(TO_SERVER_PLAYERITEM);
+		byte[] action = ByteBuffer.allocate(2).putShort((short) 0).array();
+		byte[] item = ByteBuffer.allocate(2).putShort((short) 1).array();//VERIFICAR
+		byte[] lengthOfNextItem = ByteBuffer.allocate(4).putInt(0).array();//VERIFICAR
+		byte[] serializedPointerThing = ByteBuffer.allocate(4).putInt(0).array();
+		
+		packet.appendLast(action);
+		packet.appendLast(item);
+		packet.appendLast(lengthOfNextItem);
+		packet.appendLast(serializedPointerThing);
+	}
+
+	private void printCoordinate(Coordinate coordinate) {
+		List<Float> position = coordinate.getPosition();
+		List<Float> angle = coordinate.getAngle();
+		List<Float> speed = coordinate.getSpeed();
+		System.out.println(String.format("posição: %s %s %s",position.get(0),position.get(1),position.get(2)));
+		System.out.println(String.format("velocidade: %s %s %s",speed.get(0),speed.get(1),speed.get(2)));
+		System.out.println(String.format("angulo: %s %s",angle.get(0),angle.get(1)));
 	}
 	
 	
@@ -182,5 +217,13 @@ public class MinetestClient {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Scratch getScratch() {
+		return scratch;
+	}
+
+	public void setScratch(Scratch scratch) {
+		this.scratch = scratch;
 	}
 }

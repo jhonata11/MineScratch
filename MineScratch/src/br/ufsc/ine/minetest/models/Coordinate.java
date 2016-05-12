@@ -1,6 +1,5 @@
 package br.ufsc.ine.minetest.models;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,7 +21,6 @@ public class Coordinate {
 		speed.add(new Float(0));
 
 		this.angle = new LinkedList<Float>();
-		angle.add(new Float(0));
 		angle.add(new Float(0));
 		angle.add(new Float(0));
 	}
@@ -61,7 +59,7 @@ public class Coordinate {
 
 	public void setAngle(Float pitch, Float yaw) {
 		this.angle.set(0, pitch);
-		this.speed.set(1, yaw);
+		this.angle.set(1, yaw);
 	}
 
 	public void setAngle(List<Float> angle) {

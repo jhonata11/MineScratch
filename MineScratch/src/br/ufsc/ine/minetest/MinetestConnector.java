@@ -1,6 +1,6 @@
 package br.ufsc.ine.minetest;
 
-import br.ufsc.ine.utils.PrettyPrinter;
+//import br.ufsc.ine.utils.PrettyPrinter;
 
 public class MinetestConnector {
 
