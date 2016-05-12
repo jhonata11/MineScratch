@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import br.ufsc.ine.minetest.MinetestProtocol;
-import br.ufsc.ine.minetest.Sender;
+import br.ufsc.ine.minetest.network.Sender;
 import br.ufsc.ine.utils.Utils;
 
 public class TestMinetestProtocol {

@@ -1,10 +1,12 @@
-package br.ufsc.ine.minetest;
+package br.ufsc.ine.minetest.network;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.util.concurrent.Semaphore;
+
+import br.ufsc.ine.minetest.MinetestProtocol;
 
 public class Sender{
 

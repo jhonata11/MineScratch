@@ -62,6 +62,7 @@ public class TestController {
 		Command girarParaDireita = new Command() {
 			@Override
 			public void execute(String param) {
+				controller.getController().turnRight(Integer.parseInt(param));
 				System.out.println("girar para direita: " + param);
 			}
 		};

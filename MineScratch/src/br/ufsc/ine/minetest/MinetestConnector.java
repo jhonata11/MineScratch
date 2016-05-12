@@ -1,5 +1,8 @@
 package br.ufsc.ine.minetest;
 
+import br.ufsc.ine.minetest.network.Receiver;
+import br.ufsc.ine.minetest.network.Sender;
+
 //import br.ufsc.ine.utils.PrettyPrinter;
 
 public class MinetestConnector {

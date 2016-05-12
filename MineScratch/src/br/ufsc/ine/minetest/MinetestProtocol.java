@@ -9,6 +9,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import br.ufsc.ine.minetest.network.Sender;
 import br.ufsc.ine.utils.Utils;
 
 public class MinetestProtocol {

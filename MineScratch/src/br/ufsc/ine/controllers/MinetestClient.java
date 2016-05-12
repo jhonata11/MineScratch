@@ -9,11 +9,11 @@ import java.util.concurrent.Semaphore;
 import org.apache.commons.lang3.ArrayUtils;
 
 import br.ufsc.ine.minetest.MinetestConnector;
-import br.ufsc.ine.minetest.MinetestPacket;
-import br.ufsc.ine.minetest.Receiver;
-import br.ufsc.ine.minetest.Sender;
+import br.ufsc.ine.minetest.models.Character;
 import br.ufsc.ine.minetest.models.Coordinate;
-import br.ufsc.ine.minetest.models.PlayerInfo;
+import br.ufsc.ine.minetest.network.MinetestPacket;
+import br.ufsc.ine.minetest.network.Receiver;
+import br.ufsc.ine.minetest.network.Sender;
 import br.ufsc.ine.scratch.Scratch;
 import br.ufsc.ine.utils.Utils;
 
@@ -31,7 +31,7 @@ public class MinetestClient {
 	private Sender sender;
 	private Receiver receiver;
 	
-	private PlayerInfo playerInfo;
+	private Character character;
 	private MinetestConnector connector;
 	private Semaphore connectionSemaphore;
 
@@ -40,7 +40,7 @@ public class MinetestClient {
 	
 
 	public MinetestClient(String host, int port, String username, String password) throws InterruptedException {
-		this.playerInfo = new PlayerInfo();
+		this.character = new Character();
 		this.connector = new MinetestConnector(host, port, username, password);
 		this.connectionSemaphore = new Semaphore(1);
 
@@ -85,9 +85,8 @@ public class MinetestClient {
 				Integer pitch1000 = Utils.byteToInt(ArrayUtils.subarray(data, 12, 16));
 				Integer yaw1000 = Utils.byteToInt(ArrayUtils.subarray(data, 16, 20));
 				
-				this.playerInfo.getCoordinates().setPosition(new Float(x10000/(float)10000), new Float(y10000/(float)10000), new Float(z10000/(float)10000));
-				this.playerInfo.getCoordinates().setAngle(new Float(pitch1000/(float)1000), new Float(yaw1000/(float)1000));
-				printCoordinate(this.playerInfo.getCoordinates());
+				this.character.setPosition(new Float(x10000/(float)10000), new Float(y10000/(float)10000), new Float(z10000/(float)10000));
+				this.character.setAngle(new Float(pitch1000/(float)1000), new Float(yaw1000/(float)1000));
 			}
 		}
 	}
@@ -107,9 +106,8 @@ public class MinetestClient {
 	
 	public void turnRight(Integer degrees){
 		Coordinate newCoordinate = new Coordinate();
-		Coordinate playerCoordinates = this.playerInfo.getCoordinates();
-		newCoordinate.setPosition(playerCoordinates.getPosition().get(0), playerCoordinates.getPosition().get(1), playerCoordinates.getPosition().get(2));
-		newCoordinate.setAngle(playerCoordinates.getAngle().get(0), playerCoordinates.getAngle().get(1)+degrees);
+		newCoordinate.setPosition(character.getPosition().get(0), character.getPosition().get(1), character.getPosition().get(2));
+		newCoordinate.setAngle(character.getAngle().get(0), character.getAngle().get(1)+degrees);
 		
 		this.teleport(newCoordinate);
 	}
@@ -117,20 +115,18 @@ public class MinetestClient {
 	public void turnLeft(Integer degrees){
 		Coordinate newCoordinate = new Coordinate();
 		
-		Coordinate coordinates = this.playerInfo.getCoordinates();
-		newCoordinate.setPosition(coordinates.getPosition().get(0), coordinates.getPosition().get(1), coordinates.getPosition().get(2));
-		newCoordinate.setAngle(coordinates.getAngle().get(0), coordinates.getAngle().get(1)+(degrees * -1));
+		newCoordinate.setPosition(character.getPosition().get(0), character.getPosition().get(1), character.getPosition().get(2));
+		newCoordinate.setAngle(character.getAngle().get(0), character.getAngle().get(1)+(degrees * -1));
 		this.teleport(newCoordinate);
 	}
 	
 	
 	public void move(Coordinate deltaPosition){
-		Coordinate coordinates = this.playerInfo.getCoordinates();
-		Float x = coordinates.getPosition().get(0) + deltaPosition.getPosition().get(0);
-		Float y = coordinates.getPosition().get(1) + deltaPosition.getPosition().get(1);
-		Float z = coordinates.getPosition().get(2) + deltaPosition.getPosition().get(2);
-		Float pitch = coordinates.getAngle().get(0) + deltaPosition.getAngle().get(0);
-		Float yaw = coordinates.getAngle().get(1) + deltaPosition.getAngle().get(1);
+		Float x = character.getPosition().get(0) + deltaPosition.getPosition().get(0);
+		Float y = character.getPosition().get(1) + deltaPosition.getPosition().get(1);
+		Float z = character.getPosition().get(2) + deltaPosition.getPosition().get(2);
+		Float pitch = character.getAngle().get(0) + deltaPosition.getAngle().get(0);
+		Float yaw = character.getAngle().get(1) + deltaPosition.getAngle().get(1);
 		
 		Coordinate newCoordinate = new Coordinate();
 		newCoordinate.setPosition(x, y, z);
@@ -140,13 +136,12 @@ public class MinetestClient {
 	}
 	
 	public void walk(Integer distance){
-		Coordinate coordinates = this.playerInfo.getCoordinates();
-		Float dx = new Float(distance * Math.cos((90 + coordinates.getAngle().get(1)) / 180 * Math.PI));
-		Float dz = new Float(distance * Math.sin((90 + coordinates.getAngle().get(1)) / 180 * Math.PI));
-		Coordinate newPosition = new Coordinate();
-		newPosition.setPosition(dx, (float)0, dz);
+		Float dx = new Float(distance * Math.cos((90 + character.getAngle().get(1)) / 180 * Math.PI));
+		Float dz = new Float(distance * Math.sin((90 + character.getAngle().get(1)) / 180 * Math.PI));
+		Coordinate newCoordinate = new Coordinate();
+		newCoordinate.setPosition(dx, (float)0, dz);
 		
-		this.move(newPosition);
+		this.move(newCoordinate);
 
 	}
 
@@ -160,9 +155,9 @@ public class MinetestClient {
 		speed.forEach((number) -> allocateBytes(packet, new Integer(number.intValue()* 100)));
 		angle.forEach((number) -> allocateBytes(packet, new Integer(number.intValue()* 100)));
 		
-		this.playerInfo.getCoordinates().setPosition(position);
-		this.playerInfo.getCoordinates().setSpeed(speed);
-		this.playerInfo.getCoordinates().setAngle(angle);
+		this.character.setPosition(position.get(0), position.get(1), position.get(2));
+		this.character.setSpeed(speed.get(0), speed.get(1), speed.get(2));
+		this.character.setAngle(angle.get(0), angle.get(1));
 		
 		packet.appendLast(ByteBuffer.allocate(4).putInt(0x01).array());
 		sendCommand(packet);

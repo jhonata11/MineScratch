@@ -1,4 +1,4 @@
-package br.ufsc.ine.minetest;
+package br.ufsc.ine.minetest.network;
 
 import java.util.ArrayList;
 import java.util.Arrays;

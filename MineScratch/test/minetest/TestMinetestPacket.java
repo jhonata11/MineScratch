@@ -9,7 +9,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.ufsc.ine.minetest.MinetestPacket;
+import br.ufsc.ine.minetest.network.MinetestPacket;
 import br.ufsc.ine.utils.Utils;
 
 public class TestMinetestPacket {
