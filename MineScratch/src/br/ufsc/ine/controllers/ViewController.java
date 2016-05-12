@@ -4,6 +4,7 @@ import java.net.UnknownHostException;
 
 import org.junit.Test;
 
+import br.ufsc.ine.minetest.Minetest;
 import br.ufsc.ine.minetest.MinetestConnector;
 import br.ufsc.ine.minetest.exceptions.HostFormatException;
 import br.ufsc.ine.minetest.exceptions.PasswordLimitExcededException;
@@ -18,13 +19,13 @@ public class ViewController {
 	private static final int USERNAME_LIMIT_LENGTH = 20;
 	private static final int PASSWORD_LIMIT_LENGTH = 20;
 	private MinetestConnector connector;
-	private MinetestClient controller;
+	private Minetest controller;
 	private PrettyPrinter printer;
 
 
 	public void connectToMinetest(String host, String port, String username, String password, Scratch scratch) throws InterruptedException, Exception, UnknownHostException {
 		this.verifyArguments(host, port, username, password);
-		this.controller = new MinetestClient(host, Integer.parseInt(port), username, password);
+		this.controller = new Minetest(host, Integer.parseInt(port), username, password);
 		this.controller.startApplication(scratch);
 //		this.connector = new MinetestConnector(host, Integer.parseInt(port), username, password);
 //		this.connector.setPrinter(printer);
@@ -81,11 +82,11 @@ public class ViewController {
 		this.printer = printer;
 	}
 
-	public MinetestClient getController() {
+	public Minetest getController() {
 		return controller;
 	}
 
-	public void setController(MinetestClient controller) {
+	public void setController(Minetest controller) {
 		this.controller = controller;
 	}
 
