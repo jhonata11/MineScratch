@@ -1,5 +1,5 @@
 package br.ufsc.ine.scratch;
 
-public abstract class Command {
+public abstract class Instruction {
 	public abstract void execute(String param);
 }

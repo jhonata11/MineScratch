@@ -10,7 +10,7 @@ import br.ufsc.ine.minetest.exceptions.HostFormatException;
 import br.ufsc.ine.minetest.exceptions.PasswordLimitExcededException;
 import br.ufsc.ine.minetest.exceptions.PortFormatException;
 import br.ufsc.ine.minetest.exceptions.UsernameLimitExcededException;
-import br.ufsc.ine.scratch.Command;
+import br.ufsc.ine.scratch.Instruction;
 import br.ufsc.ine.scratch.Scratch;
 import br.ufsc.ine.utils.PrettyPrinter;
 

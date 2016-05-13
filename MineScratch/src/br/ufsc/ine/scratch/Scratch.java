@@ -13,16 +13,16 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class Scratch implements Runnable {
-	private Map<String, Command> commands;
+	private Map<String, Instruction> instructions;
 	private ScratchProtocol protocol;
 
 	public Scratch() {
 		this.protocol = new ScratchProtocol();
-		this.commands = new HashMap<>();
+		this.instructions = new HashMap<>();
 	}
 
-	public void addCommand(String key, Command command) {
-		this.commands.put(key, command);
+	public void addInstruction(String key, Instruction command) {
+		this.instructions.put(key, command);
 	}
 
 	public void listen(ServerSocket serverSocket) throws IOException {
@@ -40,12 +40,12 @@ public abstract class Scratch implements Runnable {
 	}
 
 	private void executeCommand(String message) {
-		for (String key : commands.keySet()) {
+		for (String key : instructions.keySet()) {
 			if (message.contains(key)) {
 				List<String> lines = Arrays.asList(message.toString().split("/"));
 				String param = lines.get(lines.indexOf(key) + 1);
 				String value = param.replaceAll("\\D+", "");
-				commands.get(key).execute(value);
+				instructions.get(key).execute(value);
 			}
 		}
 	}
@@ -64,7 +64,6 @@ public abstract class Scratch implements Runnable {
 
 		} catch (Exception e) {
 		}
-
 	}
 
 }
