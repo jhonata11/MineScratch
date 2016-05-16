@@ -29,7 +29,7 @@ public class SendChat extends Command{
 		String str = new String(encodedMessage, StandardCharsets.UTF_16BE);
 		System.err.println("mensagem enviada: " + str);
 
-		minetest.getSender().sendCommand(packet);
+		minetest.sendCommand(packet);
 	}
 
 }

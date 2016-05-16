@@ -31,12 +31,12 @@ public class MainWindow extends JFrame {
 	private Thread connectionThread;
 	private boolean loggedIn;
 	public MainWindow() {
-		connectionThread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				connectToMinetest();
-			}
-		});
+//		connectionThread = new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				connectToMinetest();
+//			}
+//		});
 		
 		panel = new JPanel();
 		definePanel();
@@ -92,7 +92,7 @@ public class MainWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(!loggedIn)
-					connectionThread.start();
+					connectToMinetest();
 					loggedIn = true;
 			}
 		});
@@ -126,7 +126,7 @@ public class MainWindow extends JFrame {
 		String username = usernameTextField.getText();
 		String password = passwordTextField.getText();
 		try {
-//			controller.connectToMinetest(host, port, username, password);
+			controller.connectToMinetest(host, port, username, password);
 			loggedIn = true;
 		} catch (Exception e) {
 			e.printStackTrace();

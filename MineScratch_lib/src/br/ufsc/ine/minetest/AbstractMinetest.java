@@ -7,7 +7,10 @@ import java.util.concurrent.Semaphore;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import br.ufsc.ine.minetest.commands.SendChat;
+import br.ufsc.ine.minetest.commands.Teleport;
 import br.ufsc.ine.minetest.models.Character;
+import br.ufsc.ine.minetest.network.MinetestPacket;
 import br.ufsc.ine.minetest.network.Receiver;
 import br.ufsc.ine.minetest.network.Sender;
 import br.ufsc.ine.scratch.Scratch;
@@ -27,11 +30,12 @@ public abstract class AbstractMinetest implements Runnable {
 		character.setName(username);
 		connector = new MinetestConnector(host, port, username, password);
 		connectionSemaphore = new Semaphore(1);
-
 		sender = new Sender(host, port, connectionSemaphore);
 		receiver = new Receiver(sender.getMinetestProtocol(), connectionSemaphore, port);
 
 		this.commands = new HashMap<>();
+		this.addCommand("teleport", new Teleport(this));
+		this.addCommand("send_chat", new SendChat(this));
 	}
 
 	public void addCommand(String key, Command command) {
@@ -92,12 +96,12 @@ public abstract class AbstractMinetest implements Runnable {
 		} catch (Exception e) {
 		}
 	}
-
-	public Sender getSender() {
-		return sender;
-	}
 	
-	public Character getCharacter(){
+	public void sendCommand(MinetestPacket packet) throws Exception {
+		this.sender.sendCommand(packet);
+	}
+
+	public Character getCharacter() {
 		return character;
 	}
 }

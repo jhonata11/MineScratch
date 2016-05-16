@@ -2,13 +2,13 @@ package br.ufsc.ine.controllers;
 
 import java.net.UnknownHostException;
 
-import br.ufsc.ine.minetest.Minetest;
 import br.ufsc.ine.minetest.MinetestConnector;
 import br.ufsc.ine.minetest.exceptions.HostFormatException;
 import br.ufsc.ine.minetest.exceptions.PasswordLimitExcededException;
 import br.ufsc.ine.minetest.exceptions.PortFormatException;
 import br.ufsc.ine.minetest.exceptions.UsernameLimitExcededException;
-import br.ufsc.ine.scratch.Scratch;
+import br.ufsc.ine.models.minetest.MinetestClient;
+import br.ufsc.ine.models.scratch.ScratchClient;
 import br.ufsc.ine.utils.PrettyPrinter;
 
 public class ViewController {
@@ -16,17 +16,18 @@ public class ViewController {
 	private static final int USERNAME_LIMIT_LENGTH = 20;
 	private static final int PASSWORD_LIMIT_LENGTH = 20;
 	private MinetestConnector connector;
-	private Minetest controller;
 	private PrettyPrinter printer;
+	private MinetestClient minetest;
 
 
-	public void connectToMinetest(String host, String port, String username, String password, Scratch scratch) throws InterruptedException, Exception, UnknownHostException {
+	public void connectToMinetest(String host, String port, String username, String password) throws InterruptedException, Exception, UnknownHostException {
 		this.verifyArguments(host, port, username, password);
-		this.controller = new Minetest(host, Integer.parseInt(port), username, password);
-		this.controller.startApplication(scratch);
-//		this.connector = new MinetestConnector(host, Integer.parseInt(port), username, password);
-//		this.connector.setPrinter(printer);
-//		this.connector.connect();
+		
+		minetest = new MinetestClient(host, Integer.parseInt(port), username, password);
+		ScratchClient scratch = new ScratchClient(minetest);
+		minetest.setScratch(scratch);
+		Thread minetestThread = new Thread(minetest);
+		minetestThread.start();
 	}
 	
 	public void disconnect() throws Exception{
@@ -78,13 +79,4 @@ public class ViewController {
 	public void setPrinter(PrettyPrinter printer) {
 		this.printer = printer;
 	}
-
-	public Minetest getController() {
-		return controller;
-	}
-
-	public void setController(Minetest controller) {
-		this.controller = controller;
-	}
-
 }

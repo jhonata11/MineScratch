@@ -33,8 +33,10 @@ public class Teleport extends Command{
 		minetest.getCharacter().setAngle(angle.get(0), angle.get(1));
 
 		packet.appendLast(ByteBuffer.allocate(4).putInt(0x01).array());
-		minetest.getSender().sendCommand(packet);
+		minetest.sendCommand(packet);
 	}
+
+
 	
 	private void allocateBytes(MinetestPacket packet, Integer value) {
 		byte[] bytes = ByteBuffer.allocate(4).putInt(value).array();
