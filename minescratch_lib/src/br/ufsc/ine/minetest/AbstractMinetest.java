@@ -24,6 +24,7 @@ public abstract class AbstractMinetest implements Runnable {
 	private Semaphore connectionSemaphore;
 	private Scratch scratch;
 	private Map<String, Command> commands;
+	private Thread scratchThread;
 
 	public AbstractMinetest(String host, Integer port, String username, String password) throws InterruptedException {
 		character = new Character();
@@ -57,12 +58,16 @@ public abstract class AbstractMinetest implements Runnable {
 	}
 
 	private void initScratch(Scratch scratch) {
-		Thread scratchThread = new Thread(scratch);
+		scratchThread = new Thread(scratch);
 		scratchThread.start();
 	}
 
 	public void setScratch(Scratch scratch) {
 		this.scratch = scratch;
+	}
+	
+	public void disconnectMinetest() throws Exception{
+		connector.disconnect();
 	}
 
 	private void receiveMessage() throws InterruptedException {

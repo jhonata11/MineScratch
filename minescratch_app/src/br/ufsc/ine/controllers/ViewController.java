@@ -2,7 +2,6 @@ package br.ufsc.ine.controllers;
 
 import java.net.UnknownHostException;
 
-import br.ufsc.ine.minetest.MinetestConnector;
 import br.ufsc.ine.minetest.exceptions.HostFormatException;
 import br.ufsc.ine.minetest.exceptions.PasswordLimitExcededException;
 import br.ufsc.ine.minetest.exceptions.PortFormatException;
@@ -15,7 +14,6 @@ public class ViewController {
 
 	private static final int USERNAME_LIMIT_LENGTH = 20;
 	private static final int PASSWORD_LIMIT_LENGTH = 20;
-	private MinetestConnector connector;
 	private PrettyPrinter printer;
 	private MinetestClient minetest;
 
@@ -31,7 +29,7 @@ public class ViewController {
 	}
 	
 	public void disconnect() throws Exception{
-		this.connector.disconnect();
+		minetest.disconnectMinetest();
 	}
 
 	public void verifyArguments(String host, String port, String username, String password)
