@@ -16,6 +16,12 @@ public class ScratchProtocol {
 				break;
 			}
 		}
+		
+//		if(message.toString().contains("andar_para_frente")){
+//			System.out.println(message.toString());
+//		}
+		
+		System.out.println(message);
 		return message.toString();
 	}
 

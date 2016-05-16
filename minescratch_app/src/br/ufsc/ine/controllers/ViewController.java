@@ -2,15 +2,12 @@ package br.ufsc.ine.controllers;
 
 import java.net.UnknownHostException;
 
-import org.junit.Test;
-
 import br.ufsc.ine.minetest.Minetest;
 import br.ufsc.ine.minetest.MinetestConnector;
 import br.ufsc.ine.minetest.exceptions.HostFormatException;
 import br.ufsc.ine.minetest.exceptions.PasswordLimitExcededException;
 import br.ufsc.ine.minetest.exceptions.PortFormatException;
 import br.ufsc.ine.minetest.exceptions.UsernameLimitExcededException;
-import br.ufsc.ine.scratch.Instruction;
 import br.ufsc.ine.scratch.Scratch;
 import br.ufsc.ine.utils.PrettyPrinter;
 
