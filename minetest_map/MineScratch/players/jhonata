@@ -1,0 +1,64 @@
+breath = 65535
+hp = 20
+name = jhonata
+pitch = 35.09
+position = (-492.75,676.12,286.74)
+version = 1
+yaw = 219.76
+PlayerArgsEnd
+List main 32
+Width 0
+Item default:stone
+Item default:glass
+Item default:cobble
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+EndInventoryList
+List craft 9
+Width 3
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+EndInventoryList
+List craftpreview 1
+Width 0
+Empty
+EndInventoryList
+List craftresult 1
+Width 0
+Empty
+EndInventoryList
+EndInventory
