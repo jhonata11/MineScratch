@@ -4,9 +4,7 @@ import br.ufsc.ine.minetest.AbstractMinetest;
 import br.ufsc.ine.minetest.Parameter;
 import br.ufsc.ine.scratch.Instruction;
 
-
-
-public class TurnLeft extends Instruction{
+public class TurnLeft extends Instruction {
 
 	private AbstractMinetest minetest;
 
@@ -17,7 +15,9 @@ public class TurnLeft extends Instruction{
 	@Override
 	public void execute(String param) {
 		try {
-			minetest.executeCommand("girar_para_esquerda", new Parameter(Float.class, Float.parseFloat(param)));
+			Float degrees = Float.parseFloat(param);
+			minetest.executeCommand("send_chat", new Parameter(String.class, String.format("girou %s graus", degrees)));
+			minetest.executeCommand("girar_para_esquerda", new Parameter(Float.class, param));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

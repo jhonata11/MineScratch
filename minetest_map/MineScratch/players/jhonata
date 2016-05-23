@@ -1,10 +1,10 @@
 breath = 65535
 hp = 20
 name = jhonata
-pitch = 35.09
-position = (-492.75,676.12,286.74)
+pitch = 14.7
+position = (-426.87,615,-0.85)
 version = 1
-yaw = 219.76
+yaw = 0.35
 PlayerArgsEnd
 List main 32
 Width 0

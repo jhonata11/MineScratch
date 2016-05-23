@@ -15,7 +15,9 @@ public class MoveFoward extends Instruction{
 	@Override
 	public void execute(String param) {
 		try {
-			minetest.executeCommand("andar_para_frente", new Parameter(Integer.class, Integer.parseInt(param)));
+			Integer steps = Integer.parseInt(param);
+			minetest.executeCommand("send_chat", new Parameter(String.class, String.format("andou %s passos", steps)));
+			minetest.executeCommand("andar_para_frente", new Parameter(Integer.class, steps));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

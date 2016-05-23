@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.PrintStream;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -31,13 +32,6 @@ public class MainWindow extends JFrame {
 	private Thread connectionThread;
 	private boolean loggedIn;
 	public MainWindow() {
-//		connectionThread = new Thread(new Runnable() {
-//			@Override
-//			public void run() {
-//				connectToMinetest();
-//			}
-//		});
-		
 		panel = new JPanel();
 		definePanel();
 		addToPanel();
@@ -78,6 +72,11 @@ public class MainWindow extends JFrame {
 		passwordTextField.setPlaceholder("Senha");
 
 		outputConsole = new JTextArea(20, 50);
+		PrintStream out = new PrintStream( new TextAreaOutputStream( outputConsole ) );
+		// redirect standard output stream to the TextAreaOutputStream
+		System.setOut( out );
+		System.setErr( out );
+		
 		outputConsole.setEditable(false);
 		outputConsole.setLineWrap(true);
 

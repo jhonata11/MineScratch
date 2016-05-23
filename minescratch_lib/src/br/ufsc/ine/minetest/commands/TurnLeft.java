@@ -17,6 +17,7 @@ public class TurnLeft  extends Command{
 		
 		Coordinate newCoordinate = new Coordinate();
 
+		System.out.println("teste");
 		newCoordinate.setPosition(minetest.getCharacter().getPosition().get(0), minetest.getCharacter().getPosition().get(1), minetest.getCharacter().getPosition().get(2));
 		newCoordinate.setAngle(minetest.getCharacter().getAngle().get(0), minetest.getCharacter().getAngle().get(1) + (degrees * -1));
 		minetest.executeCommand("teleport", new Parameter(Coordinate.class, newCoordinate));		
