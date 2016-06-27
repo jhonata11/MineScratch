@@ -32,7 +32,8 @@ public class Teleport extends Command{
 		minetest.getCharacter().setSpeed(speed.get(0), speed.get(1), speed.get(2));
 		minetest.getCharacter().setAngle(angle.get(0), angle.get(1));
 
-		packet.appendLast(ByteBuffer.allocate(4).putInt(0x01).array());
+		int keyPressed = 0x01;
+		packet.appendLast(ByteBuffer.allocate(4).putInt(keyPressed).array());
 		minetest.sendCommand(packet);
 	}
 

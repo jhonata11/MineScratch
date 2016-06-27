@@ -49,10 +49,10 @@ public class MainWindow extends JFrame {
 		panel.add(usernameTextField);
 		panel.add(passwordTextField);
 
-		hostaddressTextField.setText("192.168.0.17");
+		hostaddressTextField.setText("192.168.0.13");
 		portNumberTextField.setText("30000");
-		usernameTextField.setText("jhonata11");
-		passwordTextField.setText("senha");
+		usernameTextField.setText("teste");
+		passwordTextField.setText("");
 
 		panel.add(scrollPane);
 		panel.add(startButton);
@@ -75,7 +75,7 @@ public class MainWindow extends JFrame {
 		PrintStream out = new PrintStream( new TextAreaOutputStream( outputConsole ) );
 		// redirect standard output stream to the TextAreaOutputStream
 		System.setOut( out );
-		System.setErr( out );
+//		System.setErr( out );
 		
 		outputConsole.setEditable(false);
 		outputConsole.setLineWrap(true);

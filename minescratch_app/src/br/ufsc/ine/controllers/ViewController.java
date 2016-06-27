@@ -26,6 +26,7 @@ public class ViewController {
 		minetest.setScratch(scratch);
 		Thread minetestThread = new Thread(minetest);
 		minetestThread.start();
+		minetest.teleport();
 	}
 	
 	public void disconnect() throws Exception{
