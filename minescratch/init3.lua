@@ -1,12 +1,19 @@
-minetest.register_entity("bot:bot", {
+minetest.register_entity("minescratch:bot", {
     hp_max = 1000,
     physical = true,
     weight = 5,
     collisionbox = {-0.5,-0.5,-0.5, 0.5,0.5,0.5},
-    visual = "mesh",
+    visual = "cube",
     visual_size = {x=1, y=1},
-    mesh = "robot.x",
-    textures = {"robot.png"},
+    mesh = "minescrath.3ds",
+    textures = {
+      "default_chest_top.png",
+      "default_chest_top.png",
+      "default_chest_front.png",
+      "default_chest_side.png",
+      "default_chest_side.png",
+      "default_chest_side.png"
+    },
     colors = {}, -- number of required colors depends on visual
     spritediv = {x=1, y=1},
     initial_sprite_basepos = {x=0, y=0},
@@ -43,7 +50,7 @@ minetest.register_on_chat_message(function(name, message)
         local bot_pos = move(player:getpos(), player:get_look_yaw(), 5)
         bot_pos.y = bot_pos.y + 1.5
         bots[bot_name] = minetest.add_entity(bot_pos,
-                                             "bot:bot")
+                                             "minescratch:bot")
         minetest.chat_send_player(name, 'Bot "' .. bot_name .. '" criado.')
         return
     end
