@@ -1,12 +1,17 @@
 package br.ufsc.ine.models.minetest;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 import br.ufsc.ine.minetest.AbstractMinetest;
+import br.ufsc.ine.minetest.Messages;
 import br.ufsc.ine.minetest.Parameter;
-import br.ufsc.ine.minetest.commands.TurnLeft;
-import br.ufsc.ine.minetest.commands.TurnRight;
+import br.ufsc.ine.minetest.commands.RightClick;
+import br.ufsc.ine.minetest.commands.Turn;
 import br.ufsc.ine.minetest.commands.Walk;
+import br.ufsc.ine.minetest.network.MinetestPacket;
 
 public class MinetestClient extends AbstractMinetest {
 
@@ -16,16 +21,42 @@ public class MinetestClient extends AbstractMinetest {
 
 
 		this.addCommand("andar_para_frente", new Walk(this));
-		this.addCommand("girar_para_direita", new TurnRight(this));
-		this.addCommand("girar_para_esquerda", new TurnLeft(this));
+		this.addCommand("girar", new Turn(this));
+		this.addCommand("click", new RightClick(this));
 	}
 
 	public void teleport() throws Exception {
 		double[] position = selectPlayerPosition();
-		Thread.sleep(500);
+		System.err.println(String.format("Posição inicial: %s %s %s", position[0], position[1], position[2]));
 		String coordinate = String.format("/teleport %s %s %s", position[0], position[1], position[2]);
+		
+		Thread.sleep(500);
 		this.executeCommand("send_chat", new Parameter(String.class, coordinate));
 	}
+	
+//	private void getBlocks(){
+//		/*
+//		[0] u16 command
+//		[2] u8 count
+//		[3] v3s16 pos_0
+//		[3+6] v3s16 pos_1
+//		...
+//		*/
+//		
+//		short getblocks = 0x24;
+//		byte[] count =ByteBuffer.allocate(2).putShort((short)30).array();
+//		byte[] messageLength = ByteBuffer.allocate(2).putShort().array();
+//		
+//		
+//		MinetestPacket packet = createPacket(getblocks);
+//		packet.appendLast(messageLength);
+//		packet.appendLast(encodedMessage);
+//
+//		String str = new String(encodedMessage, StandardCharsets.UTF_16BE);
+//		System.err.println("mensagem enviada: " + str);
+//
+//		this.sendCommand(packet);
+//	}
 
 	private double[] selectPlayerPosition() {
 		double[][] positions = addPositions();

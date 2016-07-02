@@ -73,24 +73,38 @@ public abstract class AbstractMinetest implements Runnable {
 	private void receiveMessage() throws InterruptedException {
 		byte[] receiveCommand = sender.getMinetestProtocol().receiveCommand();
 		if (receiveCommand != null && receiveCommand.length >= 2) {
-			short tipo = Utils.byteToShort(ArrayUtils.subarray(receiveCommand, 0, 2));
+			short type = Utils.byteToShort(ArrayUtils.subarray(receiveCommand, 0, 2));
 			byte[] data = ArrayUtils.subarray(receiveCommand, 2, receiveCommand.length);
 
-			if (tipo == Messages.TOCLIENT_CHAT_MESSAGE) {
+			if (type == Messages.TOCLIENT_CHAT_MESSAGE) {
 				String str = new String(data, StandardCharsets.UTF_16BE);
 				System.out.println(str);
-			} else if (tipo == Messages.TOCLIENT_MOVE_PLAYER) {
+			} else if (type == Messages.TOCLIENT_MOVE_PLAYER) {
 
 				Integer x10000 = Utils.byteToInt(ArrayUtils.subarray(data, 0, 4));
 				Integer y10000 = Utils.byteToInt(ArrayUtils.subarray(data, 4, 8));
 				Integer z10000 = Utils.byteToInt(ArrayUtils.subarray(data, 8, 12));
+				
 				Integer pitch1000 = Utils.byteToInt(ArrayUtils.subarray(data, 12, 16));
 				Integer yaw1000 = Utils.byteToInt(ArrayUtils.subarray(data, 16, 20));
 
-				this.character.setPosition(new Float(x10000 / (float) 10000), new Float(y10000 / (float) 10000),
-						new Float(z10000 / (float) 10000));
+				this.character.setPosition(new Float(x10000 / (float) 10000), new Float(y10000 / (float) 10000), new Float(z10000 / (float) 10000));
 				this.character.setAngle(new Float(pitch1000 / (float) 1000), new Float(yaw1000 / (float) 1000));
+
+			} else if(type == 0x3c){
+				System.err.println("TOCLIENT_LOCAL_PLAYER_ANIMATIONS");
+			} else if(type == 0x4c){
+				System.err.println("TOCLIENT_EYE_OFFSET ");
+			} else if(type == 0x4b){
+				System.err.println("TOCLIENT_EYE_OFFSET ");
+			} else if(type == 0x4f){
+				System.err.println("TOCLIENT_EYE_OFFSET ");
+			}  else if(type == 0x4e){
+				System.err.println("breath");
+			} else if(type == 0x4a){
+				System.out.println("hud");
 			}
+			
 		}
 	}
 
@@ -103,6 +117,7 @@ public abstract class AbstractMinetest implements Runnable {
 	}
 	
 	public void sendCommand(MinetestPacket packet) throws Exception {
+		Thread.sleep(10);
 		this.sender.sendCommand(packet);
 	}
 

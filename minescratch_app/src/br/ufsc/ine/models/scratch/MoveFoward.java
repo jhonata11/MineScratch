@@ -4,8 +4,8 @@ import br.ufsc.ine.minetest.AbstractMinetest;
 import br.ufsc.ine.minetest.Parameter;
 import br.ufsc.ine.scratch.Instruction;
 
-public class MoveFoward extends Instruction{
-	
+public class MoveFoward extends Instruction {
+
 	private AbstractMinetest minetest;
 
 	public MoveFoward(AbstractMinetest minetest) {

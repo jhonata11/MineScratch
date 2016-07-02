@@ -49,7 +49,7 @@ public class MainWindow extends JFrame {
 		panel.add(usernameTextField);
 		panel.add(passwordTextField);
 
-		hostaddressTextField.setText("192.168.0.13");
+		hostaddressTextField.setText("192.168.0.10");
 		portNumberTextField.setText("30000");
 		usernameTextField.setText("teste");
 		passwordTextField.setText("");

@@ -17,7 +17,7 @@ public class TurnRight extends Instruction{
 		try {
 			Float degrees = Float.parseFloat(param);
 			minetest.executeCommand("send_chat", new Parameter(String.class, String.format("girou %s graus", degrees)));
-			minetest.executeCommand("girar_para_direita", new Parameter(Float.class, degrees));
+			minetest.executeCommand("girar", new Parameter(Float.class, -degrees));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -23,21 +23,27 @@ public class Teleport extends Command{
 		List<Float> position = coordinate.getPosition();
 		List<Float> speed = coordinate.getSpeed();
 		List<Float> angle = coordinate.getAngle();
-
-		position.forEach((number) -> allocateBytes(packet, new Integer(number.intValue() * 1000)));
-		speed.forEach((number) -> allocateBytes(packet, new Integer(number.intValue() * 100)));
-		angle.forEach((number) -> allocateBytes(packet, new Integer(number.intValue() * 100)));
-
-		minetest.getCharacter().setPosition(position.get(0), position.get(1), position.get(2));
-		minetest.getCharacter().setSpeed(speed.get(0), speed.get(1), speed.get(2));
-		minetest.getCharacter().setAngle(angle.get(0), angle.get(1));
-
-		int keyPressed = 0x01;
-		packet.appendLast(ByteBuffer.allocate(4).putInt(keyPressed).array());
+		
+		this.toInteger(packet, position, speed, angle);
+		this.changeCharacterPosition(position, speed, angle);
+		printCoordinate(coordinate);
+		
+		short keyPressed = 0x00;
+		packet.appendLast(ByteBuffer.allocate(4).putShort(keyPressed).array());
 		minetest.sendCommand(packet);
 	}
 
+	private void toInteger(MinetestPacket packet, List<Float> position, List<Float> speed, List<Float> angle) {
+		position.forEach((number) -> allocateBytes(packet, new Integer((int) (number * 1000))));
+		speed.forEach((number) -> allocateBytes(packet, new Integer((int) (number * 100))));
+		angle.forEach((number) -> allocateBytes(packet, new Integer((int) (number* 100))));
+	}
 
+	private void changeCharacterPosition(List<Float> position, List<Float> speed, List<Float> angle) {
+		minetest.getCharacter().setPosition(position.get(0), position.get(1), position.get(2));
+		minetest.getCharacter().setSpeed(speed.get(0), speed.get(1), speed.get(2));
+		minetest.getCharacter().setAngle(angle.get(0), angle.get(1));
+	}
 	
 	private void allocateBytes(MinetestPacket packet, Integer value) {
 		byte[] bytes = ByteBuffer.allocate(4).putInt(value).array();

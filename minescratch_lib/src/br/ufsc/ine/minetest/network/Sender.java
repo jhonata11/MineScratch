@@ -55,7 +55,7 @@ public class Sender{
 	public void disconnect() throws Exception{
 		MinetestPacket packet = new MinetestPacket();
 		packet.appendFirst(this.minetestProtocol.disconnect());
-		this.send(packet);
+		this.addHeader(packet);
 	}
 	
 	public void startReliableConnection() throws Exception{
@@ -65,7 +65,7 @@ public class Sender{
 	public void ack(short seqnum) throws Exception{
 		MinetestPacket packet = new MinetestPacket();
 		packet.appendLast(minetestProtocol.createAckPackage(seqnum));
-		this.send(packet);
+		this.addHeader(packet);
 	}
 
 	/**
@@ -81,10 +81,10 @@ public class Sender{
 	private void sendReliable(MinetestPacket packet) throws Exception {
 		packet.appendFirst(minetestProtocol.createReliableBytes(this.seqNum));
 		this.seqNum++;
-		this.send(packet);
+		this.addHeader(packet);
 	}
 
-	private void send(MinetestPacket packet) throws Exception {
+	private void addHeader(MinetestPacket packet) throws Exception {
 		packet.addToHeader(minetestProtocol.createHeader());
 		byte[] sendData = packet.converToMessage();
         sendDataToServer(sendData);
