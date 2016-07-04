@@ -91,18 +91,8 @@ public abstract class AbstractMinetest implements Runnable {
 				this.character.setPosition(new Float(x10000 / (float) 10000), new Float(y10000 / (float) 10000), new Float(z10000 / (float) 10000));
 				this.character.setAngle(new Float(pitch1000 / (float) 1000), new Float(yaw1000 / (float) 1000));
 
-			} else if(type == 0x3c){
-				System.err.println("TOCLIENT_LOCAL_PLAYER_ANIMATIONS");
-			} else if(type == 0x4c){
-				System.err.println("TOCLIENT_EYE_OFFSET ");
-			} else if(type == 0x4b){
-				System.err.println("TOCLIENT_EYE_OFFSET ");
-			} else if(type == 0x4f){
-				System.err.println("TOCLIENT_EYE_OFFSET ");
-			}  else if(type == 0x4e){
-				System.err.println("breath");
-			} else if(type == 0x4a){
-				System.out.println("hud");
+			} else {
+				System.err.println(String.format("%02X ",type).toString());
 			}
 			
 		}

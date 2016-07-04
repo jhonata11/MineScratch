@@ -29,7 +29,6 @@ public class MainWindow extends JFrame {
 	private PlaceholderTextField usernameTextField;
 	private PlaceholderTextField passwordTextField;
 	
-	private Thread connectionThread;
 	private boolean loggedIn;
 	public MainWindow() {
 		panel = new JPanel();
@@ -87,21 +86,28 @@ public class MainWindow extends JFrame {
 
 	private void defineButtons() {
 		startButton = new JButton("Iniciar");
+		startButton.setEnabled(!loggedIn);
 		startButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(!loggedIn)
+				if(!loggedIn){
 					connectToMinetest();
-					loggedIn = true;
+					startButton.setEnabled(!loggedIn);
+					stopButton.setEnabled(loggedIn);
+				}
 			}
 		});
 
 		stopButton = new JButton("Parar");
+		stopButton.setEnabled(loggedIn);
 		stopButton.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				disconnectMinetest();
+				if(loggedIn){
+					disconnectMinetest();
+					startButton.setEnabled(!loggedIn);
+					stopButton.setEnabled(loggedIn);
+				}
 			}
 		});
 	}
@@ -110,7 +116,6 @@ public class MainWindow extends JFrame {
 		try {
 			if(loggedIn){
 				this.controller.disconnect();
-				connectionThread.interrupt();
 				loggedIn = false;
 			}
 			
@@ -133,17 +138,7 @@ public class MainWindow extends JFrame {
 	}
 
 	public void init() {
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				try {
-					disconnectMinetest();
-				} finally {
-					e.getWindow().dispose();
-				}
-				
-			}
-		});
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.pack();
 		this.setVisible(true);
 	}

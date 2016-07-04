@@ -16,6 +16,7 @@ public class ViewController {
 	private static final int PASSWORD_LIMIT_LENGTH = 20;
 	private PrettyPrinter printer;
 	private MinetestClient minetest;
+	private Thread minetestThread;
 
 
 	public void connectToMinetest(String host, String port, String username, String password) throws InterruptedException, Exception, UnknownHostException {
@@ -24,13 +25,14 @@ public class ViewController {
 		minetest = new MinetestClient(host, Integer.parseInt(port), username, password);
 		ScratchClient scratch = new ScratchClient(minetest);
 		minetest.setScratch(scratch);
-		Thread minetestThread = new Thread(minetest);
+		minetestThread = new Thread(minetest);
 		minetestThread.start();
 		minetest.teleport();
 	}
 	
 	public void disconnect() throws Exception{
 		minetest.disconnectMinetest();
+		this.minetestThread.interrupt();
 	}
 
 	public void verifyArguments(String host, String port, String username, String password)
