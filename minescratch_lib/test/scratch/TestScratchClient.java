@@ -1,55 +1,41 @@
 package scratch;
 
-import org.junit.Test;
+import java.io.IOException;
 
+import br.ufsc.ine.minetest.AbstractMinetest;
 import br.ufsc.ine.scratch.Instruction;
-import br.ufsc.ine.scratch.Scratch;
+import br.ufsc.ine.scratch.ScratchServer;
 
 public class TestScratchClient {
-	class ScratchClient extends Scratch {
+
+	
+	public static void main(String[] args) throws IOException{
+	   ScratchServer server = new ConcreteScratch();
+	   MoveFoward foward = new MoveFoward(null, "andar_para_frente");
+	   server.addCommand(foward);
+	   
+	   server.listen();
+	}
+	
+}
+
+class ConcreteScratch extends ScratchServer{
+
+	public ConcreteScratch() throws IOException {
+		super();
+	}
+	
+}
+
+class MoveFoward extends Instruction {
+	public MoveFoward(AbstractMinetest minetest, String command) {
+		super(minetest, command);
 	}
 
-	private Instruction girarParaDireita;
-	private Instruction andarParaFrente;
-	private ScratchClient scratch;
-
-	@Test
-	public void setUp() throws Exception {
-		andarParaFrente = new Instruction() {
-			@Override
-			public void execute(String param) {
-				System.out.println("andar para frente: " + param);
-			}
-		};
-
-		girarParaDireita = new Instruction() {
-			@Override
-			public void execute(String param) {
-				System.out.println("girar para direita: " + param);
-			}
-		};
-		scratch = new ScratchClient();
+	@Override
+	public void executeAction(String param) {
+		System.out.println("teste " +param);
+		
 	}
 
-
-	@Test
-	public void testScratchConnections() throws Exception {
-		andarParaFrente = new Instruction() {
-			@Override
-			public void execute(String param) {
-				System.out.println("andar para frente: " + param);
-			}
-		};
-
-		girarParaDireita = new Instruction() {
-			@Override
-			public void execute(String param) {
-				System.out.println("girar para direita: " + param);
-			}
-		};
-		scratch = new ScratchClient();
-		scratch.addInstruction("andar_para_frente", andarParaFrente);
-		scratch.addInstruction("girar_para_direita", girarParaDireita);
-		scratch.run();
-	}
 }

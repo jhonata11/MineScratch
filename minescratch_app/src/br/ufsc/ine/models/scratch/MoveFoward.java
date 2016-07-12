@@ -5,15 +5,13 @@ import br.ufsc.ine.minetest.Parameter;
 import br.ufsc.ine.scratch.Instruction;
 
 public class MoveFoward extends Instruction {
-
-	private AbstractMinetest minetest;
-
-	public MoveFoward(AbstractMinetest minetest) {
-		this.minetest = minetest;
+	
+	public MoveFoward(AbstractMinetest minetest, String command) {
+		super(minetest, command);
 	}
 
 	@Override
-	public void execute(String param) {
+	public void executeAction(String param) {
 		try {
 			Integer steps = Integer.parseInt(param);
 			minetest.executeCommand("send_chat", new Parameter(String.class, String.format("andou %s passos", steps)));
@@ -21,6 +19,8 @@ public class MoveFoward extends Instruction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		
 	}
 
 }

@@ -6,14 +6,13 @@ import br.ufsc.ine.scratch.Instruction;
 
 public class TurnLeft extends Instruction {
 
-	private AbstractMinetest minetest;
-
-	public TurnLeft(AbstractMinetest minetest) {
-		this.minetest = minetest;
+	public TurnLeft(AbstractMinetest minetest, String command) {
+		super(minetest, command);
 	}
 
+
 	@Override
-	public void execute(String param) {
+	public void executeAction(String param) {
 		try {
 			Float degrees = Float.parseFloat(param);
 			minetest.executeCommand("send_chat", new Parameter(String.class, String.format("girou %s graus", degrees)));

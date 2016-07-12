@@ -55,8 +55,8 @@ public class Teleport extends Command{
 		List<Float> position = coordinate.getPosition();
 		List<Float> angle = coordinate.getAngle();
 		List<Float> speed = coordinate.getSpeed();
-		System.out.println(String.format("posição: %s %s %s", position.get(0), position.get(1), position.get(2)));
-		System.out.println(String.format("velocidade: %s %s %s", speed.get(0), speed.get(1), speed.get(2)));
-		System.out.println(String.format("angulo: %s %s", angle.get(0), angle.get(1)));
+		System.err.println(String.format("posição: %s %s %s", position.get(0), position.get(1), position.get(2)));
+		System.err.println(String.format("velocidade: %s %s %s", speed.get(0), speed.get(1), speed.get(2)));
+		System.err.println(String.format("angulo: %s %s", angle.get(0), angle.get(1)));
 	}
 }

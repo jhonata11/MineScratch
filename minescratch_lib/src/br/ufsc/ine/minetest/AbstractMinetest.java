@@ -7,14 +7,16 @@ import java.util.concurrent.Semaphore;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import br.ufsc.ine.minetest.commands.AddNode;
 import br.ufsc.ine.minetest.commands.SendChat;
 import br.ufsc.ine.minetest.commands.Teleport;
 import br.ufsc.ine.minetest.models.Character;
 import br.ufsc.ine.minetest.network.MinetestPacket;
 import br.ufsc.ine.minetest.network.Receiver;
 import br.ufsc.ine.minetest.network.Sender;
-import br.ufsc.ine.scratch.Scratch;
+import br.ufsc.ine.scratch.ScratchServer;
 import br.ufsc.ine.utils.Utils;
+import utils.Properties;
 
 public abstract class AbstractMinetest implements Runnable {
 	private Sender sender;
@@ -22,9 +24,9 @@ public abstract class AbstractMinetest implements Runnable {
 	private Character character;
 	private MinetestConnector connector;
 	private Semaphore connectionSemaphore;
-	private Scratch scratch;
+	private ScratchServer scratch;
 	private Map<String, Command> commands;
-	private Thread scratchThread;
+	private Properties properties;
 
 	public AbstractMinetest(String host, Integer port, String username, String password) throws InterruptedException {
 		character = new Character();
@@ -33,10 +35,12 @@ public abstract class AbstractMinetest implements Runnable {
 		connectionSemaphore = new Semaphore(1);
 		sender = new Sender(host, port, connectionSemaphore);
 		receiver = new Receiver(sender.getMinetestProtocol(), connectionSemaphore, port);
+		setProperties(new Properties());
 
 		this.commands = new HashMap<>();
 		this.addCommand("teleport", new Teleport(this));
 		this.addCommand("send_chat", new SendChat(this));
+		this.addCommand("add_node", new AddNode(this));
 	}
 
 	public void addCommand(String key, Command command) {
@@ -57,12 +61,11 @@ public abstract class AbstractMinetest implements Runnable {
 		}
 	}
 
-	private void initScratch(Scratch scratch) {
-		scratchThread = new Thread(scratch);
-		scratchThread.start();
+	private void initScratch(ScratchServer scratch) {
+		scratch.listen();
 	}
 
-	public void setScratch(Scratch scratch) {
+	public void setScratch(ScratchServer scratch) {
 		this.scratch = scratch;
 	}
 	
@@ -90,9 +93,10 @@ public abstract class AbstractMinetest implements Runnable {
 
 				this.character.setPosition(new Float(x10000 / (float) 10000), new Float(y10000 / (float) 10000), new Float(z10000 / (float) 10000));
 				this.character.setAngle(new Float(pitch1000 / (float) 1000), new Float(yaw1000 / (float) 1000));
+				
 
 			} else {
-				System.err.println(String.format("%02X ",type).toString());
+//				System.err.println(String.format("%02X ",type).toString());
 			}
 			
 		}
@@ -113,5 +117,13 @@ public abstract class AbstractMinetest implements Runnable {
 
 	public Character getCharacter() {
 		return character;
+	}
+
+	public Properties getProperties() {
+		return properties;
+	}
+
+	public void setProperties(Properties properties) {
+		this.properties = properties;
 	}
 }
