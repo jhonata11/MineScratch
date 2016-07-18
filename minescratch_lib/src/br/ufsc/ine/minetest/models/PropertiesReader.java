@@ -1,4 +1,4 @@
-package utils;
+package br.ufsc.ine.minetest.models;
 
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -9,8 +9,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
-import br.ufsc.ine.minetest.models.Position;
 
 public class PropertiesReader {
 	protected String propsPath;
@@ -35,21 +33,12 @@ public class PropertiesReader {
 
 	private void setAllowed(JsonObject jsonObject, Properties properties) {
 		JsonArray array = jsonObject.get("allowed").getAsJsonArray();
-		HashMap<Position, List<Position>> allowedPropertie = new HashMap<>();
-		for(JsonElement allowed: array){
-			JsonObject element = allowed.getAsJsonObject();
-			JsonArray from = element.get("from").getAsJsonArray();
-			JsonArray allow = element.get("allow").getAsJsonArray();
-			
-			Position allowedPos = positionFromElement(from);
-			List<Position> list = new ArrayList<>();
-			for(JsonElement i: allow){
-				Position position = positionFromElement(i.getAsJsonArray());
-				list.add(position);
-			}
-			allowedPropertie.put(allowedPos, list);
-		}
-		properties.setAllowed(allowedPropertie);
+		List<Position> allowed = new ArrayList<Position>();
+        for(JsonElement initial : array){
+        	Position pos = positionFromElement(initial.getAsJsonArray());
+        	allowed.add(pos);
+        }
+        properties.setAllowed(allowed);
 	}
 
 

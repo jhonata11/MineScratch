@@ -20,15 +20,14 @@ public class SendChat extends Command{
 	@Override
 	public void execute(Parameter param) throws Exception {
 		String  message = (String) param.getParameter();
-		byte[] encodedMessage = Charset.forName("UTF-16BE").encode(message ).array();
+		byte[] encodedMessage = Charset.forName("UTF-16BE").encode(message).array();
 		byte[] messageLength = ByteBuffer.allocate(2).putShort((short) message.getBytes().length).array();
 		MinetestPacket packet = createPacket(Messages.TOSERVER_CHAT_MESSAGE);
 		packet.appendLast(messageLength);
 		packet.appendLast(encodedMessage);
 
 		String str = new String(encodedMessage, StandardCharsets.UTF_16BE);
-		System.err.println("mensagem enviada: " + str);
-
+		System.err.println(str);
 		minetest.sendCommand(packet);
 	}
 

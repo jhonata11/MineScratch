@@ -4,30 +4,25 @@
     "blockSpecs": [
          [
             "",
-            "Andar para frente %n passos",
-            "andar_para_frente",
-            1
+            "andar para frente",
+            "andar_para_frente"
         ],
-         [
-            "",
-            "Girar para esquerda %n graus",
-            "girar_para_esquerda",
-            90
-        ],
+
 
         [
             "",
-            "Girar para direita %n graus",
+            "girar %m.graus graus",
             "girar_para_direita",
             90
         ],
-
         [
-            "",
-            "Girar para tras",
-            "girar_para_tras"
+          "",
+          "clicar na frente",
+          "clicar_na_frente"
         ]
+    ],
 
-
-    ]
+    "menus": {
+      "graus": [90, 180, 270]
+    }
 }

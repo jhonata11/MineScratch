@@ -11,7 +11,7 @@ public class TurnRight extends Instruction{
 	}
 
 	@Override
-	public void executeAction(String param) {
+	public void executeAction() {
 		try {
 			Float degrees = Float.parseFloat(param);
 			minetest.executeCommand("send_chat", new Parameter(String.class, String.format("girou %s graus", degrees)));

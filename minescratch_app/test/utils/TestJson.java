@@ -1,14 +1,11 @@
 package utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.HashMap;
-import java.util.List;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import br.ufsc.ine.minetest.models.Position;
+import br.ufsc.ine.minetest.models.Properties;
+import br.ufsc.ine.minetest.models.PropertiesReader;
 
 
 public class TestJson {
@@ -17,16 +14,10 @@ public class TestJson {
 	public void testReadJson() throws Exception {
 		PropertiesReader props = new PropertiesReader("./properties.json");
 		Properties properties = props.readProperties();
-		Position currentPosition = new Position();
-		currentPosition.setPosition(new Float(-28.9), new Float(61.5), new Float(0.5));
-		HashMap<Position, List<Position>> allowed = properties.getAllowed();
 		
-		assertTrue(allowed.containsKey(currentPosition));
-		List<Position> allowedPos = allowed.get(currentPosition);
-		Position position = new Position();
-		position.setPosition(new Float(-29.9), new Float(61.5), new Float(0.5));
-		assertEquals(position, allowedPos.get(0));
+		assertEquals(7, properties.getInitials().size());
+		assertEquals(4, properties.getAllowed().size());
+
 	}
-	
 
 }

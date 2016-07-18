@@ -12,7 +12,10 @@ public class TestScratchClient {
 	public static void main(String[] args) throws IOException{
 	   ScratchServer server = new ConcreteScratch();
 	   MoveFoward foward = new MoveFoward(null, "andar_para_frente");
+	   Turn turn = new Turn(null, "girar_para_direita");
+
 	   server.addCommand(foward);
+	   server.addCommand(turn);
 	   
 	   server.listen();
 	}
@@ -33,9 +36,19 @@ class MoveFoward extends Instruction {
 	}
 
 	@Override
-	public void executeAction(String param) {
+	public void executeAction() {
 		System.out.println("teste " +param);
-		
+	}
+}
+
+class Turn extends Instruction{
+	public Turn(AbstractMinetest minetest, String command) {
+		super(minetest, command);
 	}
 
+	@Override
+	public void executeAction() {
+		System.out.println("teste " +param);
+	}
+	
 }

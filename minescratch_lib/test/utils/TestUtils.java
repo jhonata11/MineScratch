@@ -77,6 +77,5 @@ public class TestUtils {
 	@Test
 	public void teste() throws Exception {
 		System.out.println(Utils.integerToBinary(-1));
-		
 	}
 }

@@ -14,14 +14,15 @@ public abstract class ScratchHandler implements HttpHandler {
 	public void handle(HttpExchange t) throws IOException {
 		String path = t.getRequestURI().toString();
 		if(command != null && path.contains(command)){
-			param = path.split("/")[2];
+			String[] split = path.split("/");
+			param = split.length > 2 ? split[2] : "1";
+			executeAction();
 		}
-		executeAction(param);
         t.sendResponseHeaders(200, response.length());
         OutputStream os = t.getResponseBody();
         os.write(response.getBytes());
         os.close();
 	}
 	
-	public abstract void executeAction(String param);
+	public abstract void executeAction();
 }

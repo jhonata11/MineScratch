@@ -11,12 +11,12 @@ import br.ufsc.ine.minetest.commands.AddNode;
 import br.ufsc.ine.minetest.commands.SendChat;
 import br.ufsc.ine.minetest.commands.Teleport;
 import br.ufsc.ine.minetest.models.Character;
+import br.ufsc.ine.minetest.models.Properties;
 import br.ufsc.ine.minetest.network.MinetestPacket;
 import br.ufsc.ine.minetest.network.Receiver;
 import br.ufsc.ine.minetest.network.Sender;
 import br.ufsc.ine.scratch.ScratchServer;
 import br.ufsc.ine.utils.Utils;
-import utils.Properties;
 
 public abstract class AbstractMinetest implements Runnable {
 	private Sender sender;
@@ -24,6 +24,7 @@ public abstract class AbstractMinetest implements Runnable {
 	private Character character;
 	private MinetestConnector connector;
 	private Semaphore connectionSemaphore;
+
 	private ScratchServer scratch;
 	private Map<String, Command> commands;
 	private Properties properties;
